@@ -4,8 +4,8 @@ export function TopBar() {
   return (
     <header id="top-bar" className="relative pt-10 pb-6">
       <div className="flex items-center justify-between">
-        {/* Left: Name — hidden on mobile */}
-        <span className="hidden md:block font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
+        {/* Left: Name */}
+        <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
           Charlotte Schaerlaecken
         </span>
 
@@ -21,8 +21,8 @@ export function TopBar() {
           />
         </div>
 
-        {/* Right: Title — hidden on mobile */}
-        <span className="hidden md:block font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase text-right">
+        {/* Right: Title */}
+        <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase text-right">
           Creatief Strateeg
         </span>
       </div>
