@@ -22,17 +22,12 @@ export function HeroVisual() {
           style={{ fontWeight: 700 }}
         >
           <AnimatedWords
-            text="Creatief Strateeg"
+            text="Creatief Strateeg All Things Social"
             step="main-title"
             direction="bottom"
             delayBetweenWords={150}
             earlyTriggerAfter={300}
-          />
-          <AnimatedWords
-            text="All Things Social"
-            step="main-title"
-            direction="bottom"
-            delayBetweenWords={150}
+            lineBreakAfter={2}
           />
         </div>
       </div>

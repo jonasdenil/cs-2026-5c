@@ -11,6 +11,7 @@ interface AnimatedWordsProps {
   as?: "span" | "div" | "h1" | "p"
   delayBetweenWords?: number
   earlyTriggerAfter?: number // ms after start to trigger next step (allows overlap)
+  lineBreakAfter?: number    // insert a <br> after the nth word (1-indexed)
 }
 
 export function AnimatedWords({
@@ -21,6 +22,7 @@ export function AnimatedWords({
   as: Component = "span",
   delayBetweenWords = 80,
   earlyTriggerAfter,
+  lineBreakAfter,
 }: AnimatedWordsProps) {
   const { isStepActive, isStepComplete, completeStep, triggerNextStepEarly } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
@@ -86,16 +88,21 @@ export function AnimatedWords({
       {words.map((word, index) => {
         const isWordVisible = isDone || skipped || (isActive && index < animatedCount)
         return (
-          <span
-            key={index}
-            className="inline-block transition-all duration-300 ease-out"
-            style={{
-              opacity: isWordVisible ? 1 : 0,
-              transform: isWordVisible ? "translateY(0)" : `translateY(${translateY})`,
-            }}
-          >
-            {word}
-            {index < words.length - 1 && "\u00A0"}
+          <span key={index}>
+            <span
+              className="inline-block transition-all duration-300 ease-out"
+              style={{
+                opacity: isWordVisible ? 1 : 0,
+                transform: isWordVisible ? "translateY(0)" : `translateY(${translateY})`,
+              }}
+            >
+              {word}
+            </span>
+            {/* Space or line break after word */}
+            {lineBreakAfter && index === lineBreakAfter - 1
+              ? <br />
+              : index < words.length - 1 && "\u00A0"
+            }
           </span>
         )
       })}
