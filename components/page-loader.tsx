@@ -6,21 +6,21 @@ export function PageLoader({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<"enter" | "visible" | "exit" | "done">("enter")
 
   useEffect(() => {
-    // Phase 1: Fade-in - 400ms
+    // Phase 1: Move-in + fade-in - 600ms
     const enterTimer = setTimeout(() => {
       setPhase("visible")
-    }, 400)
+    }, 600)
 
-    // Phase 2: Visible for 0.7 seconds
+    // Phase 2: Visible for 1.6 seconds
     const visibleTimer = setTimeout(() => {
       setPhase("exit")
-    }, 1100) // 400ms fade-in + 700ms visible
+    }, 2200) // 600ms enter + 1600ms visible
 
-    // Phase 3: Fade-out - 400ms
+    // Phase 3: Move-out + fade-out - 600ms
     const exitTimer = setTimeout(() => {
       setPhase("done")
       onComplete()
-    }, 1500) // 400ms fade-in + 700ms visible + 400ms fade-out
+    }, 2800) // 600ms enter + 1600ms visible + 600ms exit
 
     return () => {
       clearTimeout(enterTimer)
@@ -34,15 +34,17 @@ export function PageLoader({ onComplete }: { onComplete: () => void }) {
   return (
     <div className="fixed inset-0 z-[100] bg-rustic-red flex items-center justify-center">
       <div
-        className="transition-all duration-500 ease-out"
         style={{
           opacity: phase === "enter" ? 0 : phase === "exit" ? 0 : 1,
           transform:
             phase === "enter"
-              ? "translateY(-60px)"
+              ? "translateY(-40px)"
               : phase === "exit"
-              ? "translateY(60px)"
+              ? "translateY(40px)"
               : "translateY(0)",
+          transition: phase === "exit"
+            ? "opacity 600ms cubic-bezier(0.4, 0, 1, 1), transform 600ms cubic-bezier(0.4, 0, 1, 1)"
+            : "opacity 600ms cubic-bezier(0, 0, 0.2, 1), transform 600ms cubic-bezier(0, 0, 0.2, 1)",
         }}
       >
         {/* SC Monogram in Merino White */}
