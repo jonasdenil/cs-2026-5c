@@ -29,6 +29,11 @@ export function AnimatedElement({
   const [skipped, setSkipped] = useState(false)
   const elementRef = useRef<HTMLDivElement>(null)
   const hasStartedRef = useRef(false)
+  
+  // Store props in refs
+  const propsRef = useRef({ delay, duration, earlyTriggerAfter, step })
+  propsRef.current = { delay, duration, earlyTriggerAfter, step }
+  
   const isActive = isStepActive(step)
   const isDone = isStepComplete(step)
 
@@ -41,41 +46,39 @@ export function AnimatedElement({
     if (!isActive || hasStartedRef.current) return
     hasStartedRef.current = true
 
-    // If element is hidden, skip immediately
+    const { delay, duration, earlyTriggerAfter, step } = propsRef.current
+
     if (checkVisibility()) {
       setSkipped(true)
       completeStep(step)
       return
     }
 
-    let earlyTriggerTimer: NodeJS.Timeout | undefined
-    let animateTimer: NodeJS.Timeout | undefined
-    let completeTimer: NodeJS.Timeout | undefined
+    const timers: NodeJS.Timeout[] = []
 
-    // Early trigger for overlapping animations
     if (earlyTriggerAfter !== undefined) {
-      earlyTriggerTimer = setTimeout(() => {
+      const earlyTimer = setTimeout(() => {
         triggerNextStepEarly(step)
       }, earlyTriggerAfter)
+      timers.push(earlyTimer)
     }
 
-    animateTimer = setTimeout(() => {
+    const animateTimer = setTimeout(() => {
       setHasAnimated(true)
     }, delay)
+    timers.push(animateTimer)
 
     if (earlyTriggerAfter === undefined) {
-      completeTimer = setTimeout(() => {
+      const completeTimer = setTimeout(() => {
         completeStep(step)
       }, delay + duration)
+      timers.push(completeTimer)
     }
 
     return () => {
-      if (animateTimer) clearTimeout(animateTimer)
-      if (completeTimer) clearTimeout(completeTimer)
-      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
+      timers.forEach(t => clearTimeout(t))
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive])
+  }, [isActive, checkVisibility, completeStep, triggerNextStepEarly])
 
   const isVisible = isDone || hasAnimated || skipped
   const translateY = direction === "top" ? "-30px" : "30px"

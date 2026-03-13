@@ -43,7 +43,7 @@ export function TopBar() {
           direction="top"
           className="hidden md:block font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase text-right"
           delayBetweenWords={60}
-          earlyTriggerAfter={80}
+          earlyTriggerAfter={180}
         />
       </div>
     </header>

@@ -23,6 +23,14 @@ export function AnimatedLines({
   const { isStepActive, isStepComplete, completeStep, triggerNextStepEarly } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
   const hasStartedRef = useRef(false)
+  
+  // Store props in refs
+  const propsRef = useRef({ delayBetweenLines, earlyTriggerAfter, step })
+  propsRef.current = { delayBetweenLines, earlyTriggerAfter, step }
+  
+  const linesLengthRef = useRef(lines.length)
+  linesLengthRef.current = lines.length
+  
   const isActive = isStepActive(step)
   const isDone = isStepComplete(step)
 
@@ -30,43 +38,41 @@ export function AnimatedLines({
     if (!isActive || hasStartedRef.current) return
     hasStartedRef.current = true
 
-    let earlyTriggerTimer: NodeJS.Timeout | undefined
-    let interval: NodeJS.Timeout | undefined
-    let completeTimer: NodeJS.Timeout | undefined
+    const { delayBetweenLines, earlyTriggerAfter, step } = propsRef.current
+    const timers: NodeJS.Timeout[] = []
 
-    // Early trigger for overlapping animations
     if (earlyTriggerAfter !== undefined) {
-      earlyTriggerTimer = setTimeout(() => {
+      const earlyTimer = setTimeout(() => {
         triggerNextStepEarly(step)
       }, earlyTriggerAfter)
+      timers.push(earlyTimer)
     }
 
     let count = 0
-    interval = setInterval(() => {
+    const interval = setInterval(() => {
       count++
       setAnimatedCount(count)
-      if (count >= lines.length) {
-        if (interval) clearInterval(interval)
+      if (count >= linesLengthRef.current) {
+        clearInterval(interval)
         if (earlyTriggerAfter === undefined) {
-          completeTimer = setTimeout(() => {
+          const completeTimer = setTimeout(() => {
             completeStep(step)
           }, 300)
+          timers.push(completeTimer)
         }
       }
     }, delayBetweenLines)
+    timers.push(interval as unknown as NodeJS.Timeout)
 
     return () => {
-      if (interval) clearInterval(interval)
-      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
-      if (completeTimer) clearTimeout(completeTimer)
+      timers.forEach(t => clearTimeout(t))
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive])
+  }, [isActive, completeStep, triggerNextStepEarly])
 
   return (
     <div className={className}>
       {lines.map((line, index) => {
-        const isLineVisible = isDone || (isActive && index < animatedCount)
+        const isLineVisible = isDone || index < animatedCount
         return (
           <div
             key={index}

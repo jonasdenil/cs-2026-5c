@@ -10,8 +10,8 @@ interface AnimatedWordsProps {
   className?: string
   as?: "span" | "div" | "h1" | "p"
   delayBetweenWords?: number
-  earlyTriggerAfter?: number // ms after start to trigger next step (allows overlap)
-  startDelay?: number        // ms to wait before starting word animation
+  earlyTriggerAfter?: number
+  startDelay?: number
 }
 
 export function AnimatedWords({
@@ -30,12 +30,17 @@ export function AnimatedWords({
   const [animationComplete, setAnimationComplete] = useState(false)
   const elementRef = useRef<HTMLElement>(null)
   const hasStartedRef = useRef(false)
+  
+  // Store props in refs to avoid dependency issues
+  const propsRef = useRef({ delayBetweenWords, earlyTriggerAfter, startDelay, step })
+  propsRef.current = { delayBetweenWords, earlyTriggerAfter, startDelay, step }
+  
   const words = text.split(" ")
+  const wordsLengthRef = useRef(words.length)
+  wordsLengthRef.current = words.length
+  
   const isActive = isStepActive(step)
-  // isStepComplete becomes true when the step advances — we use animationComplete
-  // as a local latch so words stay visible even after currentStep moves on
 
-  // Check visibility once when the step becomes active
   const checkVisibility = useCallback(() => {
     if (!elementRef.current) return false
     return window.getComputedStyle(elementRef.current).display === "none"
@@ -45,52 +50,47 @@ export function AnimatedWords({
     if (!isActive || hasStartedRef.current) return
     hasStartedRef.current = true
 
-    // If element is hidden, skip immediately
+    const { delayBetweenWords, earlyTriggerAfter, startDelay, step } = propsRef.current
+
     if (checkVisibility()) {
       setSkipped(true)
       completeStep(step)
       return
     }
 
-    let startTimer: NodeJS.Timeout | undefined
-    let earlyTriggerTimer: NodeJS.Timeout | undefined
-    let interval: NodeJS.Timeout | undefined
-    let completeTimer: NodeJS.Timeout | undefined
+    const timers: NodeJS.Timeout[] = []
 
-    // Wait for startDelay before beginning animation
-    startTimer = setTimeout(() => {
-      // Early trigger for overlapping animations
+    const startTimer = setTimeout(() => {
       if (earlyTriggerAfter !== undefined) {
-        earlyTriggerTimer = setTimeout(() => {
+        const earlyTimer = setTimeout(() => {
           triggerNextStepEarly(step)
         }, earlyTriggerAfter)
+        timers.push(earlyTimer)
       }
 
-      // Animate words one by one
       let count = 0
-      interval = setInterval(() => {
+      const interval = setInterval(() => {
         count++
         setAnimatedCount(count)
-        if (count >= words.length) {
-          if (interval) clearInterval(interval)
-          completeTimer = setTimeout(() => {
+        if (count >= wordsLengthRef.current) {
+          clearInterval(interval)
+          const completeTimer = setTimeout(() => {
             setAnimationComplete(true)
             if (earlyTriggerAfter === undefined) {
               completeStep(step)
             }
           }, 300)
+          timers.push(completeTimer)
         }
       }, delayBetweenWords)
+      timers.push(interval as unknown as NodeJS.Timeout)
     }, startDelay)
+    timers.push(startTimer)
 
     return () => {
-      if (startTimer) clearTimeout(startTimer)
-      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
-      if (interval) clearInterval(interval)
-      if (completeTimer) clearTimeout(completeTimer)
+      timers.forEach(t => clearTimeout(t))
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive])
+  }, [isActive, checkVisibility, completeStep, triggerNextStepEarly])
 
   const translateY = direction === "top" ? "-20px" : "20px"
 
