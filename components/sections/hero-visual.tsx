@@ -3,7 +3,7 @@ import { Phone } from "lucide-react"
 
 export function HeroVisual() {
   return (
-    <div id="hero-visual" className="pt-8">
+    <div id="hero-visual" className="pt-20">
 
       {/* TV + Title stacking block */}
       <div className="relative flex items-center justify-center">
@@ -31,14 +31,14 @@ export function HeroVisual() {
       </div>
 
       {/* Intro text + CTA */}
-      <div className="flex flex-col items-center gap-5 pt-10 pb-24">
+      <div className="flex flex-col items-center gap-5 pt-20 pb-24">
         <p
-          className="font-sans text-merino-white text-center uppercase max-w-lg"
+          className="font-sans text-merino-white text-center uppercase max-w-2xl"
           style={{ fontSize: "18px", fontWeight: 400, lineHeight: "normal" }}
         >
-          Scroll-stopping content? That&apos;s not luck, it&apos;s strategy.
+          If it stops the scroll, there&apos;s strategy behind it.
           <br />
-          From tone to timing — I help your brand own the feed.
+          From tone to timing, I help your brand own the feed.
         </p>
 
         <a
