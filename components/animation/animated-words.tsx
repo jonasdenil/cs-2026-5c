@@ -24,14 +24,14 @@ export function AnimatedWords({
   earlyTriggerAfter,
   lineBreakAfter,
 }: AnimatedWordsProps) {
-  const { isStepActive, isStepComplete, completeStep, triggerNextStepEarly } = useAnimation()
+  const { isStepActive, completeStep, triggerNextStepEarly } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
   const [skipped, setSkipped] = useState(false)
+  const [animationComplete, setAnimationComplete] = useState(false)
   const elementRef = useRef<HTMLElement>(null)
   const hasStartedRef = useRef(false)
   const words = text.split(" ")
   const isActive = isStepActive(step)
-  const isDone = isStepComplete(step)
 
   // Check visibility once when the step becomes active
   const checkVisibility = useCallback(() => {
@@ -65,13 +65,14 @@ export function AnimatedWords({
       setAnimatedCount(count)
       if (count >= words.length) {
         clearInterval(interval)
-        // Complete after last word finishes its CSS transition (300ms)
-        // Only call completeStep if we didn't use earlyTrigger
-        if (earlyTriggerAfter === undefined) {
-          setTimeout(() => {
+        // Mark this component's animation as internally complete
+        setTimeout(() => {
+          setAnimationComplete(true)
+          // Only call completeStep if we didn't use earlyTrigger
+          if (earlyTriggerAfter === undefined) {
             completeStep(step)
-          }, 300)
-        }
+          }
+        }, 300)
       }
     }, delayBetweenWords)
 
@@ -86,7 +87,7 @@ export function AnimatedWords({
   return (
     <Component ref={elementRef as React.RefObject<HTMLSpanElement>} className={className}>
       {words.map((word, index) => {
-        const isWordVisible = isDone || skipped || (isActive && index < animatedCount)
+        const isWordVisible = animationComplete || skipped || (isActive && index < animatedCount)
         return (
           <span key={index}>
             <span
