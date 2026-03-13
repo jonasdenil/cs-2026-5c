@@ -3,7 +3,7 @@ import { Phone } from "lucide-react"
 
 export function HeroVisual() {
   return (
-    <div id="hero-visual" className="pt-20">
+    <div id="hero-visual" className="pt-24">
 
       {/* TV + Title stacking block */}
       <div className="relative flex items-center justify-center">
@@ -22,8 +22,8 @@ export function HeroVisual() {
 
         {/* Title — on top of the TV */}
         <h1
-          className="absolute inset-0 z-10 flex flex-col items-center justify-center font-serif text-merino-white text-center uppercase leading-none pointer-events-none"
-          style={{ fontSize: "90px", fontWeight: 700 }}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center font-serif text-merino-white text-center uppercase leading-none pointer-events-none text-[clamp(2.5rem,8vw,5.625rem)]"
+          style={{ fontWeight: 700 }}
         >
           <span>Creatief Strateeg</span>
           <span>All Things Social</span>
@@ -31,7 +31,7 @@ export function HeroVisual() {
       </div>
 
       {/* Intro text + CTA */}
-      <div className="flex flex-col items-center gap-5 pt-20 pb-24">
+      <div className="flex flex-col items-center gap-5 pt-24 pb-24">
         <p
           className="font-sans text-merino-white text-center uppercase max-w-2xl"
           style={{ fontSize: "18px", fontWeight: 400, lineHeight: "normal" }}

@@ -5,7 +5,7 @@ export function TopBar() {
     <header id="top-bar" className="relative pt-10 pb-6">
       <div className="flex items-center justify-between">
         {/* Left: Name */}
-        <span className="font-sans text-merino-white text-base font-medium uppercase">
+        <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
           Charlotte Schaerlaecken
         </span>
 
@@ -17,12 +17,12 @@ export function TopBar() {
             width={140}
             height={56}
             priority
-            className="h-10 md:h-14 w-auto"
+            className="h-8 sm:h-10 md:h-14 w-auto"
           />
         </div>
 
         {/* Right: Title */}
-        <span className="font-sans text-merino-white text-base font-medium uppercase text-right">
+        <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase text-right">
           Creatief Strateeg
         </span>
       </div>

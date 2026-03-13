@@ -12,9 +12,9 @@ export function BottomNav() {
   return (
     <nav
       id="bottom-nav"
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max"
     >
-      <div className="flex items-center gap-3 bg-merino-white rounded-full px-4 py-3 shadow-lg">
+      <div className="flex items-center gap-3 bg-merino-white rounded-full px-4 py-3 shadow-lg whitespace-nowrap">
         {/* SC Logo */}
         <div className="flex-shrink-0">
           <Image
