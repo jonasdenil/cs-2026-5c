@@ -14,6 +14,8 @@ export function TopBar() {
           step="topbar-name"
           direction="top"
           className="hidden md:block font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase"
+          delayBetweenWords={60}
+          earlyTriggerAfter={120}
         />
 
         {/* Center: CS Monogram — absolutely centered within the header */}
@@ -22,6 +24,7 @@ export function TopBar() {
           direction="top"
           className="absolute left-1/2 -translate-x-1/2"
           duration={400}
+          earlyTriggerAfter={250}
         >
           <Image
             src="/images/cs-monogram.svg"
@@ -39,6 +42,8 @@ export function TopBar() {
           step="topbar-title"
           direction="top"
           className="hidden md:block font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase text-right"
+          delayBetweenWords={60}
+          earlyTriggerAfter={80}
         />
       </div>
     </header>
