@@ -24,7 +24,7 @@ export function AnimatedWords({
   earlyTriggerAfter,
   lineBreakAfter,
 }: AnimatedWordsProps) {
-  const { isStepActive, completeStep, triggerNextStepEarly } = useAnimation()
+  const { isStepActive, isStepComplete, completeStep, triggerNextStepEarly } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
   const [skipped, setSkipped] = useState(false)
   const [animationComplete, setAnimationComplete] = useState(false)
@@ -32,6 +32,8 @@ export function AnimatedWords({
   const hasStartedRef = useRef(false)
   const words = text.split(" ")
   const isActive = isStepActive(step)
+  // isStepComplete becomes true when the step advances — we use animationComplete
+  // as a local latch so words stay visible even after currentStep moves on
 
   // Check visibility once when the step becomes active
   const checkVisibility = useCallback(() => {
@@ -65,16 +67,18 @@ export function AnimatedWords({
       setAnimatedCount(count)
       if (count >= words.length) {
         clearInterval(interval)
-        // Mark this component's animation as internally complete
+        // After last word's CSS transition, mark fully complete
         setTimeout(() => {
           setAnimationComplete(true)
-          // Only call completeStep if we didn't use earlyTrigger
           if (earlyTriggerAfter === undefined) {
             completeStep(step)
           }
         }, 300)
       }
     }, delayBetweenWords)
+
+    // earlyTrigger advances the sequence but we intentionally do NOT clear
+    // animatedCount — words already shown stay shown via the animationComplete latch
 
     return () => {
       clearInterval(interval)
@@ -87,7 +91,9 @@ export function AnimatedWords({
   return (
     <Component ref={elementRef as React.RefObject<HTMLSpanElement>} className={className}>
       {words.map((word, index) => {
-        const isWordVisible = animationComplete || skipped || (isActive && index < animatedCount)
+        // Keep words visible if: animation fully done, skipped, actively animating past this index,
+        // OR the step has moved on (isStepComplete) but we're still mid-animation
+        const isWordVisible = animationComplete || skipped || index < animatedCount
         return (
           <span key={index}>
             <span
