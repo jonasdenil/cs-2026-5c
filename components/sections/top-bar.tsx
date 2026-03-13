@@ -4,11 +4,11 @@ export function TopBar() {
   return (
     <header
       id="top-bar"
-      className="w-full bg-rustic-red py-4 px-6 md:px-12 lg:px-20"
+      className="w-full bg-rustic-red pt-10 pb-4 px-6 md:px-12 lg:px-20"
     >
       <div className="flex items-center justify-between">
         {/* Left: Name */}
-        <span className="font-serif text-merino-white text-sm md:text-base tracking-widest uppercase">
+        <span className="font-sans text-merino-white text-base font-medium tracking-widest uppercase">
           Charlotte Schaerlaecken
         </span>
 
@@ -25,7 +25,7 @@ export function TopBar() {
         </div>
 
         {/* Right: Title */}
-        <span className="font-serif text-merino-white text-sm md:text-base tracking-widest uppercase">
+        <span className="font-sans text-merino-white text-base font-medium tracking-widest uppercase">
           Creatief Strateeg
         </span>
       </div>
