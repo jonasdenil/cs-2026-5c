@@ -4,27 +4,18 @@ export function HeroVisual() {
   return (
     /*
      * Stacking context:
-     * - h1 text sits at z-0 (behind the TV)
-     * - TV image sits at z-10 (on top of the text)
-     * The wrapper is relative so the TV can be centered via flex,
-     * and the h1 is absolute to fill the same space.
+     * - TV image sits at z-0 (behind the text)
+     * - h1 text sits at z-10 (on top of the TV)
+     * The wrapper takes the remaining viewport height after the topbar
+     * so the whole block is vertically centered.
      */
-    <div id="hero-visual" className="relative flex items-center justify-center pb-8">
-
-      {/* Background text layer — full container width, behind TV */}
-      <h1
-        className="absolute inset-0 z-0 flex flex-col items-center justify-center font-serif text-merino-white text-center uppercase leading-none w-full"
-        style={{
-          fontSize: "clamp(3rem, 10vw, 9rem)",
-          fontWeight: 700,
-        }}
-      >
-        <span>Creatief Strateeg</span>
-        <span>All Things Social</span>
-      </h1>
-
-      {/* TV image — on top of the text */}
-      <div className="relative z-10" style={{ transform: "rotate(9deg)" }}>
+    <div
+      id="hero-visual"
+      className="relative flex items-center justify-center"
+      style={{ minHeight: "calc(100vh - 80px)" }}
+    >
+      {/* TV image — behind the text */}
+      <div className="relative z-0" style={{ transform: "rotate(9deg)" }}>
         <Image
           src="/images/tv.png"
           alt="Charlotte Schaerlaecken in een vintage televisie"
@@ -35,6 +26,14 @@ export function HeroVisual() {
         />
       </div>
 
+      {/* Text layer — on top of the TV */}
+      <h1
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center font-serif text-merino-white text-center uppercase leading-none pointer-events-none"
+        style={{ fontSize: "90px", fontWeight: 700 }}
+      >
+        <span>Creatief Strateeg</span>
+        <span>All Things Social</span>
+      </h1>
     </div>
   )
 }
