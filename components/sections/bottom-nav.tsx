@@ -33,12 +33,12 @@ export function BottomNav() {
               <a
                 href={item.href}
                 className="
-                  block px-5 py-2
+                  block px-2.5 py-1.5
                   bg-rustic-red text-merino-white
-                  font-sans text-sm font-medium uppercase
+                  font-sans text-base font-medium uppercase
                   rounded-full
-                  transition-all duration-200 ease-out
-                  hover:bg-ruby-red hover:scale-105
+                  transition-colors duration-200 ease-out
+                  hover:bg-ruby-red
                   focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-merino-white
                 "
               >
