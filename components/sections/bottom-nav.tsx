@@ -22,7 +22,7 @@ export function BottomNav() {
             alt="SC Logo"
             width={120}
             height={40}
-            className="h-6 w-auto"
+            className="h-9 w-auto"
           />
         </div>
 
