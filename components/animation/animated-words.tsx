@@ -52,10 +52,14 @@ export function AnimatedWords({
       return
     }
 
+    let startTimer: NodeJS.Timeout | undefined
+    let earlyTriggerTimer: NodeJS.Timeout | undefined
+    let interval: NodeJS.Timeout | undefined
+    let completeTimer: NodeJS.Timeout | undefined
+
     // Wait for startDelay before beginning animation
-    const startTimer = setTimeout(() => {
+    startTimer = setTimeout(() => {
       // Early trigger for overlapping animations
-      let earlyTriggerTimer: NodeJS.Timeout | undefined
       if (earlyTriggerAfter !== undefined) {
         earlyTriggerTimer = setTimeout(() => {
           triggerNextStepEarly(step)
@@ -64,12 +68,12 @@ export function AnimatedWords({
 
       // Animate words one by one
       let count = 0
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         count++
         setAnimatedCount(count)
         if (count >= words.length) {
-          clearInterval(interval)
-          setTimeout(() => {
+          if (interval) clearInterval(interval)
+          completeTimer = setTimeout(() => {
             setAnimationComplete(true)
             if (earlyTriggerAfter === undefined) {
               completeStep(step)
@@ -80,9 +84,13 @@ export function AnimatedWords({
     }, startDelay)
 
     return () => {
-      clearTimeout(startTimer)
+      if (startTimer) clearTimeout(startTimer)
+      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
+      if (interval) clearInterval(interval)
+      if (completeTimer) clearTimeout(completeTimer)
     }
-  }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive])
 
   const translateY = direction === "top" ? "-20px" : "20px"
 

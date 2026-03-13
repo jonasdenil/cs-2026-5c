@@ -30,8 +30,11 @@ export function AnimatedLines({
     if (!isActive || hasStartedRef.current) return
     hasStartedRef.current = true
 
-    // Early trigger for overlapping animations
     let earlyTriggerTimer: NodeJS.Timeout | undefined
+    let interval: NodeJS.Timeout | undefined
+    let completeTimer: NodeJS.Timeout | undefined
+
+    // Early trigger for overlapping animations
     if (earlyTriggerAfter !== undefined) {
       earlyTriggerTimer = setTimeout(() => {
         triggerNextStepEarly(step)
@@ -39,13 +42,13 @@ export function AnimatedLines({
     }
 
     let count = 0
-    const interval = setInterval(() => {
+    interval = setInterval(() => {
       count++
       setAnimatedCount(count)
       if (count >= lines.length) {
-        clearInterval(interval)
+        if (interval) clearInterval(interval)
         if (earlyTriggerAfter === undefined) {
-          setTimeout(() => {
+          completeTimer = setTimeout(() => {
             completeStep(step)
           }, 300)
         }
@@ -53,10 +56,12 @@ export function AnimatedLines({
     }, delayBetweenLines)
 
     return () => {
-      clearInterval(interval)
+      if (interval) clearInterval(interval)
       if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
+      if (completeTimer) clearTimeout(completeTimer)
     }
-  }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive])
 
   return (
     <div className={className}>
