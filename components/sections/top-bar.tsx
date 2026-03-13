@@ -22,7 +22,7 @@ export function TopBar() {
         </div>
 
         {/* Right: Title */}
-        <span className="font-sans text-merino-white text-base font-medium uppercase">
+        <span className="font-sans text-merino-white text-base font-medium uppercase text-right">
           Creatief Strateeg
         </span>
       </div>
