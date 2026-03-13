@@ -48,30 +48,33 @@ export function AnimatedElement({
       return
     }
 
-    // Early trigger for overlapping animations
     let earlyTriggerTimer: NodeJS.Timeout | undefined
+    let animateTimer: NodeJS.Timeout | undefined
+    let completeTimer: NodeJS.Timeout | undefined
+
+    // Early trigger for overlapping animations
     if (earlyTriggerAfter !== undefined) {
       earlyTriggerTimer = setTimeout(() => {
         triggerNextStepEarly(step)
       }, earlyTriggerAfter)
     }
 
-    const animateTimer = setTimeout(() => {
+    animateTimer = setTimeout(() => {
       setHasAnimated(true)
     }, delay)
 
-    const completeTimer = earlyTriggerAfter === undefined
-      ? setTimeout(() => {
-          completeStep(step)
-        }, delay + duration)
-      : undefined
+    if (earlyTriggerAfter === undefined) {
+      completeTimer = setTimeout(() => {
+        completeStep(step)
+      }, delay + duration)
+    }
 
     return () => {
-      clearTimeout(animateTimer)
+      if (animateTimer) clearTimeout(animateTimer)
       if (completeTimer) clearTimeout(completeTimer)
       if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
     }
-  }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
+  }, [isActive, checkVisibility, completeStep, delay, duration, earlyTriggerAfter, step, triggerNextStepEarly])
 
   const isVisible = isDone || hasAnimated || skipped
   const translateY = direction === "top" ? "-30px" : "30px"
