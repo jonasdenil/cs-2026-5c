@@ -36,11 +36,28 @@ export function AnimatedTV() {
   }, [isActive])
 
   useEffect(() => {
+    const element = document.querySelector('[data-parallax-tv]') as HTMLElement
+    if (!element) return
+
     const handleScroll = () => {
-      setParallaxY(window.scrollY * PARALLAX_FACTOR)
+      // Use getBoundingClientRect for better mobile compatibility
+      const rect = element.getBoundingClientRect()
+      const elementTop = rect.top
+      const windowHeight = window.innerHeight
+
+      // Calculate offset based on element position in viewport
+      // When element is at bottom of viewport (scrolled down), parallaxY increases
+      const scrollRatio = 1 - elementTop / windowHeight
+      const parallaxOffset = scrollRatio * (window.scrollY * PARALLAX_FACTOR)
+
+      setParallaxY(parallaxOffset)
     }
 
+    // Use passive listener for better scroll performance
     window.addEventListener("scroll", handleScroll, { passive: true })
+    // Also handle on mount to set initial state
+    handleScroll()
+
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
@@ -52,6 +69,7 @@ export function AnimatedTV() {
   return (
     <div
       className="relative z-0 w-full md:w-3/4 lg:w-1/2 mx-auto"
+      data-parallax-tv
       style={{
         opacity: isVisible ? 1 : 0,
         transform: `translateY(${translateY}px) rotate(9deg)`,
