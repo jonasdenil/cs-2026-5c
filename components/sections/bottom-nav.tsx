@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { useState } from "react"
 
 const navItems = [
   { label: "Cases", href: "#cases" },
@@ -9,11 +10,35 @@ const navItems = [
 ]
 
 export function BottomNav() {
+  const [open, setOpen] = useState(false)
+
   return (
-    <nav
-      id="bottom-nav"
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max"
-    >
+    <nav id="bottom-nav" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max">
+
+      {/* Mobile flyout menu items — stacked above nav, appear bottom-to-top */}
+      <ul className="flex flex-col items-center gap-2 mb-3 md:hidden">
+        {navItems.map((item, index) => (
+          <li
+            key={item.label}
+            className="transition-all duration-300 ease-out"
+            style={{
+              transitionDelay: open ? `${(navItems.length - 1 - index) * 80}ms` : `${index * 40}ms`,
+              opacity: open ? 1 : 0,
+              transform: open ? "translateY(0)" : "translateY(16px)",
+              pointerEvents: open ? "auto" : "none",
+            }}
+          >
+            <a
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
       <div className="flex items-center gap-3 bg-merino-white rounded-full px-4 py-3 shadow-lg whitespace-nowrap">
         {/* SC Logo */}
         <div className="flex-shrink-0">
@@ -26,27 +51,43 @@ export function BottomNav() {
           />
         </div>
 
-        {/* Nav Items */}
-        <ul className="flex items-center gap-2">
+        {/* Desktop nav items */}
+        <ul className="hidden md:flex items-center gap-2">
           {navItems.map((item) => (
             <li key={item.label}>
               <a
                 href={item.href}
-                className="
-                  block px-3.5 py-1.5
-                  bg-rustic-red text-merino-white
-                  font-sans text-base font-medium uppercase
-                  rounded-full
-                  transition-colors duration-200 ease-out
-                  hover:bg-ruby-red
-                  focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-merino-white
-                "
+                className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 ease-out hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-merino-white"
               >
                 {item.label}
               </a>
             </li>
           ))}
         </ul>
+
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setOpen((prev) => !prev)}
+          aria-expanded={open}
+          aria-label={open ? "Sluiten" : "Menu"}
+          className="md:hidden flex items-center gap-2 px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red"
+        >
+          {open ? "Sluiten" : "Menu"}
+          {open ? (
+            /* Close icon */
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          ) : (
+            /* Hamburger icon — 3 lines */
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <line x1="2" y1="4" x2="14" y2="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <line x1="2" y1="12" x2="14" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          )}
+        </button>
       </div>
     </nav>
   )
