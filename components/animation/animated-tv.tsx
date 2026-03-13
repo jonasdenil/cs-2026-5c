@@ -18,11 +18,11 @@ export function AnimatedTV() {
     // Start move-in animation (already rotated at 9deg)
     setPhase("moving")
 
-    // Trigger next step early (after 400ms, halfway through TV animation)
+    // Trigger next step early (after 300ms, roughly 1/3 through TV animation)
     // This allows the main-title to start while TV is still animating
     const earlyTrigger = setTimeout(() => {
       triggerNextStepEarly("tv")
-    }, 400)
+    }, 300)
 
     // Mark TV as done after full animation
     const doneTimer = setTimeout(() => {

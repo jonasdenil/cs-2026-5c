@@ -25,14 +25,14 @@ export function HeroVisual() {
             text="Creatief Strateeg"
             step="main-title"
             direction="bottom"
-            delayBetweenWords={100}
-            earlyTriggerAfter={500}
+            delayBetweenWords={80}
+            earlyTriggerAfter={300}
           />
           <AnimatedWords
             text="All Things Social"
             step="main-title"
             direction="bottom"
-            delayBetweenWords={100}
+            delayBetweenWords={80}
           />
         </div>
       </div>
