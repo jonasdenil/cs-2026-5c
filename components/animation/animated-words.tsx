@@ -11,7 +11,7 @@ interface AnimatedWordsProps {
   as?: "span" | "div" | "h1" | "p"
   delayBetweenWords?: number
   earlyTriggerAfter?: number // ms after start to trigger next step (allows overlap)
-  lineBreakAfter?: number    // insert a <br> after the nth word (1-indexed)
+  startDelay?: number        // ms to wait before starting word animation
 }
 
 export function AnimatedWords({
@@ -22,7 +22,7 @@ export function AnimatedWords({
   as: Component = "span",
   delayBetweenWords = 80,
   earlyTriggerAfter,
-  lineBreakAfter,
+  startDelay = 0,
 }: AnimatedWordsProps) {
   const { isStepActive, isStepComplete, completeStep, triggerNextStepEarly } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
@@ -52,37 +52,35 @@ export function AnimatedWords({
       return
     }
 
-    // Early trigger for overlapping animations
-    let earlyTriggerTimer: NodeJS.Timeout | undefined
-    if (earlyTriggerAfter !== undefined) {
-      earlyTriggerTimer = setTimeout(() => {
-        triggerNextStepEarly(step)
-      }, earlyTriggerAfter)
-    }
-
-    // Animate words one by one
-    let count = 0
-    const interval = setInterval(() => {
-      count++
-      setAnimatedCount(count)
-      if (count >= words.length) {
-        clearInterval(interval)
-        // After last word's CSS transition, mark fully complete
-        setTimeout(() => {
-          setAnimationComplete(true)
-          if (earlyTriggerAfter === undefined) {
-            completeStep(step)
-          }
-        }, 300)
+    // Wait for startDelay before beginning animation
+    const startTimer = setTimeout(() => {
+      // Early trigger for overlapping animations
+      let earlyTriggerTimer: NodeJS.Timeout | undefined
+      if (earlyTriggerAfter !== undefined) {
+        earlyTriggerTimer = setTimeout(() => {
+          triggerNextStepEarly(step)
+        }, earlyTriggerAfter)
       }
-    }, delayBetweenWords)
 
-    // earlyTrigger advances the sequence but we intentionally do NOT clear
-    // animatedCount — words already shown stay shown via the animationComplete latch
+      // Animate words one by one
+      let count = 0
+      const interval = setInterval(() => {
+        count++
+        setAnimatedCount(count)
+        if (count >= words.length) {
+          clearInterval(interval)
+          setTimeout(() => {
+            setAnimationComplete(true)
+            if (earlyTriggerAfter === undefined) {
+              completeStep(step)
+            }
+          }, 300)
+        }
+      }, delayBetweenWords)
+    }, startDelay)
 
     return () => {
-      clearInterval(interval)
-      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
+      clearTimeout(startTimer)
     }
   }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
 

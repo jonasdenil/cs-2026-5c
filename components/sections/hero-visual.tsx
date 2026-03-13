@@ -17,18 +17,25 @@ export function HeroVisual() {
         <AnimatedTV />
 
         {/* Title — on top of the TV */}
-        <div
+        <h1
           className="absolute inset-0 z-10 flex flex-col items-center justify-center font-serif text-merino-white text-center uppercase leading-none pointer-events-none text-[clamp(2.5rem,8vw,5.625rem)]"
-          style={{ fontWeight: 700, maxWidth: "90vw" }}
+          style={{ fontWeight: 700 }}
         >
           <AnimatedWords
-            text="Creatief Strateeg All Things Social"
+            text="Creatief Strateeg"
             step="main-title"
             direction="bottom"
             delayBetweenWords={150}
-            earlyTriggerAfter={300}
           />
-        </div>
+          <AnimatedWords
+            text="All Things Social"
+            step="main-title"
+            direction="bottom"
+            delayBetweenWords={150}
+            startDelay={450}
+            earlyTriggerAfter={750}
+          />
+        </h1>
       </div>
 
       {/* Intro text + CTA */}
