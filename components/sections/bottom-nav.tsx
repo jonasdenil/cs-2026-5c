@@ -1,19 +1,45 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useAnimation } from "@/components/animation/animation-context"
 
 const navItems = [
-  { label: "Cases", href: "#cases" },
   { label: "Who?", href: "#who" },
+  { label: "Cases", href: "#cases" },
   { label: "Hit My Pager", href: "#contact" },
 ]
 
 export function BottomNav() {
   const [open, setOpen] = useState(false)
+  const { isStepActive, isStepComplete, completeStep } = useAnimation()
+  const [hasAnimated, setHasAnimated] = useState(false)
+  
+  const isActive = isStepActive("main-nav")
+  const isDone = isStepComplete("main-nav")
+
+  useEffect(() => {
+    if (isActive && !hasAnimated) {
+      setHasAnimated(true)
+      const timer = setTimeout(() => {
+        completeStep("main-nav")
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [isActive, hasAnimated, completeStep])
+
+  const isVisible = isDone || hasAnimated
 
   return (
-    <nav id="bottom-nav" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max">
+    <nav
+      id="bottom-nav"
+      className="fixed bottom-6 left-1/2 z-50 w-max"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: `translateX(-50%) translateY(${isVisible ? "0" : "30px"})`,
+        transition: "opacity 500ms ease-out, transform 500ms ease-out",
+      }}
+    >
 
       {/* Mobile flyout menu items — stacked above nav, appear bottom-to-top */}
       <ul className="flex flex-col items-center gap-2 mb-3 md:hidden">
@@ -70,7 +96,7 @@ export function BottomNav() {
           onClick={() => setOpen((prev) => !prev)}
           aria-expanded={open}
           aria-label={open ? "Sluiten" : "Menu"}
-          className="md:hidden flex items-center gap-2 px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red"
+          className="md:hidden flex items-center gap-2 px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
         >
           {/* Label — crossfades between Menu and Sluiten */}
           <span className="relative inline-grid">
