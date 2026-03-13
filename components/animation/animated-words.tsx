@@ -91,25 +91,18 @@ export function AnimatedWords({
   return (
     <Component ref={elementRef as React.RefObject<HTMLSpanElement>} className={className}>
       {words.map((word, index) => {
-        // Keep words visible if: animation fully done, skipped, actively animating past this index,
-        // OR the step has moved on (isStepComplete) but we're still mid-animation
         const isWordVisible = animationComplete || skipped || index < animatedCount
         return (
-          <span key={index}>
-            <span
-              className="inline-block transition-all duration-300 ease-out"
-              style={{
-                opacity: isWordVisible ? 1 : 0,
-                transform: isWordVisible ? "translateY(0)" : `translateY(${translateY})`,
-              }}
-            >
-              {word}
-            </span>
-            {/* Space or line break after word */}
-            {lineBreakAfter && index === lineBreakAfter - 1
-              ? <br />
-              : index < words.length - 1 && "\u00A0"
-            }
+          <span
+            key={index}
+            className="inline-block transition-all duration-300 ease-out"
+            style={{
+              opacity: isWordVisible ? 1 : 0,
+              transform: isWordVisible ? "translateY(0)" : `translateY(${translateY})`,
+              marginRight: index < words.length - 1 ? "0.25em" : 0,
+            }}
+          >
+            {word}
           </span>
         )
       })}
