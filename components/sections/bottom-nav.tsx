@@ -1,7 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useAnimation } from "@/components/animation/animation-context"
 
 const navItems = [
   { label: "Who?", href: "#who" },
@@ -11,9 +12,33 @@ const navItems = [
 
 export function BottomNav() {
   const [open, setOpen] = useState(false)
+  const { isStepActive, isStepComplete, completeStep } = useAnimation()
+  const [hasAnimated, setHasAnimated] = useState(false)
+  
+  const isActive = isStepActive("main-nav")
+  const isDone = isStepComplete("main-nav")
+
+  useEffect(() => {
+    if (isActive && !hasAnimated) {
+      setHasAnimated(true)
+      const timer = setTimeout(() => {
+        completeStep("main-nav")
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [isActive, hasAnimated, completeStep])
+
+  const isVisible = isDone || hasAnimated
 
   return (
-    <nav id="bottom-nav" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max">
+    <nav
+      id="bottom-nav"
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max transition-all duration-500 ease-out"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: `translateX(-50%) translateY(${isVisible ? "0" : "30px"})`,
+      }}
+    >
 
       {/* Mobile flyout menu items — stacked above nav, appear bottom-to-top */}
       <ul className="flex flex-col items-center gap-2 mb-3 md:hidden">
