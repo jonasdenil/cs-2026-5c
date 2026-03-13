@@ -1,5 +1,6 @@
 "use client"
 
+// AnimatedWords: word-by-word staggered animation component
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useAnimation, AnimationStep } from "./animation-context"
 
