@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, ReactNode, useRef } from "react"
+import { useEffect, useState, ReactNode, useRef, useCallback } from "react"
 import { useAnimation, AnimationStep } from "./animation-context"
 
 interface AnimatedElementProps {
@@ -24,40 +24,43 @@ export function AnimatedElement({
 }: AnimatedElementProps) {
   const { isStepActive, isStepComplete, completeStep } = useAnimation()
   const [hasAnimated, setHasAnimated] = useState(false)
+  const [skipped, setSkipped] = useState(false)
   const elementRef = useRef<HTMLDivElement>(null)
+  const hasStartedRef = useRef(false)
   const isActive = isStepActive(step)
   const isDone = isStepComplete(step)
 
+  const checkVisibility = useCallback(() => {
+    if (!elementRef.current) return false
+    return window.getComputedStyle(elementRef.current).display === "none"
+  }, [])
+
   useEffect(() => {
-    // Check if element is visible (not hidden via CSS)
-    if (isActive && elementRef.current) {
-      const isHidden = window.getComputedStyle(elementRef.current).display === "none"
-      if (isHidden) {
-        // Skip this step immediately if element is hidden
-        completeStep(step)
-        return
-      }
+    if (!isActive || hasStartedRef.current) return
+    hasStartedRef.current = true
+
+    // If element is hidden, skip immediately
+    if (checkVisibility()) {
+      setSkipped(true)
+      completeStep(step)
+      return
     }
 
-    if (isActive && !hasAnimated) {
-      // Start animation
-      const animateTimer = setTimeout(() => {
-        setHasAnimated(true)
-      }, delay)
+    const animateTimer = setTimeout(() => {
+      setHasAnimated(true)
+    }, delay)
 
-      // Complete step after animation
-      const completeTimer = setTimeout(() => {
-        completeStep(step)
-      }, delay + duration)
+    const completeTimer = setTimeout(() => {
+      completeStep(step)
+    }, delay + duration)
 
-      return () => {
-        clearTimeout(animateTimer)
-        clearTimeout(completeTimer)
-      }
+    return () => {
+      clearTimeout(animateTimer)
+      clearTimeout(completeTimer)
     }
-  }, [isActive, hasAnimated, completeStep, step, duration, delay])
+  }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
 
-  const isVisible = isDone || hasAnimated
+  const isVisible = isDone || hasAnimated || skipped
   const translateY = direction === "top" ? "-30px" : "30px"
 
   return (

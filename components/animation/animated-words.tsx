@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { useAnimation, AnimationStep } from "./animation-context"
 
 interface AnimatedWordsProps {
@@ -22,42 +22,53 @@ export function AnimatedWords({
 }: AnimatedWordsProps) {
   const { isStepActive, isStepComplete, completeStep } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
+  const [skipped, setSkipped] = useState(false)
   const elementRef = useRef<HTMLElement>(null)
+  const hasStartedRef = useRef(false)
   const words = text.split(" ")
   const isActive = isStepActive(step)
   const isDone = isStepComplete(step)
 
+  // Check visibility once when the step becomes active
+  const checkVisibility = useCallback(() => {
+    if (!elementRef.current) return false
+    return window.getComputedStyle(elementRef.current).display === "none"
+  }, [])
+
   useEffect(() => {
-    // Check if element is visible (not hidden via CSS)
-    if (isActive && elementRef.current) {
-      const isHidden = window.getComputedStyle(elementRef.current).display === "none"
-      if (isHidden) {
-        // Skip this step immediately if element is hidden
-        completeStep(step)
-        return
-      }
+    if (!isActive || hasStartedRef.current) return
+    hasStartedRef.current = true
+
+    // If element is hidden, skip immediately
+    if (checkVisibility()) {
+      setSkipped(true)
+      completeStep(step)
+      return
     }
 
-    if (isActive && animatedCount < words.length) {
-      const timer = setTimeout(() => {
-        setAnimatedCount((prev) => prev + 1)
-      }, delayBetweenWords)
-      return () => clearTimeout(timer)
-    } else if (isActive && animatedCount >= words.length) {
-      // All words animated, signal completion after last word finishes
-      const timer = setTimeout(() => {
-        completeStep(step)
-      }, 300) // Wait for last word's animation to finish
-      return () => clearTimeout(timer)
-    }
-  }, [isActive, animatedCount, words.length, completeStep, step, delayBetweenWords])
+    // Animate words one by one
+    let count = 0
+    const interval = setInterval(() => {
+      count++
+      setAnimatedCount(count)
+      if (count >= words.length) {
+        clearInterval(interval)
+        // Complete after last word finishes its CSS transition (300ms)
+        setTimeout(() => {
+          completeStep(step)
+        }, 300)
+      }
+    }, delayBetweenWords)
+
+    return () => clearInterval(interval)
+  }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
 
   const translateY = direction === "top" ? "-20px" : "20px"
 
   return (
     <Component ref={elementRef as React.RefObject<HTMLSpanElement>} className={className}>
       {words.map((word, index) => {
-        const isWordVisible = isDone || (isActive && index < animatedCount)
+        const isWordVisible = isDone || skipped || (isActive && index < animatedCount)
         return (
           <span
             key={index}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, ReactNode } from "react"
+import { useEffect, useState, ReactNode, useRef } from "react"
 import { useAnimation, AnimationStep } from "./animation-context"
 
 interface AnimatedLinesProps {
@@ -20,22 +20,28 @@ export function AnimatedLines({
 }: AnimatedLinesProps) {
   const { isStepActive, isStepComplete, completeStep } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
+  const hasStartedRef = useRef(false)
   const isActive = isStepActive(step)
   const isDone = isStepComplete(step)
 
   useEffect(() => {
-    if (isActive && animatedCount < lines.length) {
-      const timer = setTimeout(() => {
-        setAnimatedCount((prev) => prev + 1)
-      }, delayBetweenLines)
-      return () => clearTimeout(timer)
-    } else if (isActive && animatedCount >= lines.length) {
-      const timer = setTimeout(() => {
-        completeStep(step)
-      }, 300)
-      return () => clearTimeout(timer)
-    }
-  }, [isActive, animatedCount, lines.length, completeStep, step, delayBetweenLines])
+    if (!isActive || hasStartedRef.current) return
+    hasStartedRef.current = true
+
+    let count = 0
+    const interval = setInterval(() => {
+      count++
+      setAnimatedCount(count)
+      if (count >= lines.length) {
+        clearInterval(interval)
+        setTimeout(() => {
+          completeStep(step)
+        }, 300)
+      }
+    }, delayBetweenLines)
+
+    return () => clearInterval(interval)
+  }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
 
   return (
     <div className={className}>
