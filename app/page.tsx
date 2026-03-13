@@ -3,17 +3,17 @@ import { HeroVisual } from "@/components/sections/hero-visual"
 
 export default function Home() {
   return (
-    <main id="main-content" className="min-h-screen">
-      {/* Hero Section */}
-      <section id="hero" className="relative flex flex-col">
-        <TopBar />
+    <main id="main-content" className="min-h-screen bg-rustic-red">
+      {/* Shared container: max-width, centered, full-width padding */}
+      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16">
 
-        {/* Hero visual: TV centered in remaining viewport height */}
-        <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-80px)] overflow-hidden">
+        {/* Hero Section */}
+        <section id="hero">
+          <TopBar />
           <HeroVisual />
-        </div>
-      </section>
+        </section>
 
+      </div>
       {/* Additional sections will be added below */}
     </main>
   )
