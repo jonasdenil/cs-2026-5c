@@ -18,13 +18,12 @@ export function HeroVisual() {
 
       {/* Overlay title - not rotated */}
       <h1
-        className="absolute font-serif text-merino-white text-center"
+        className="absolute font-serif text-merino-white text-center w-full px-4"
         style={{
           fontSize: "118px",
           fontWeight: 240,
           transform: "rotate(-9deg)",
           lineHeight: "1.2",
-          maxWidth: "90%",
         }}
       >
         creatief strateeg<br />
