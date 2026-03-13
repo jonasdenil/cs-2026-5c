@@ -1,5 +1,6 @@
 import { TopBar } from "@/components/sections/top-bar"
 import { HeroVisual } from "@/components/sections/hero-visual"
+import { BottomNav } from "@/components/sections/bottom-nav"
 
 export default function Home() {
   return (
@@ -14,6 +15,10 @@ export default function Home() {
         </section>
 
       </div>
+
+      {/* Sticky bottom navigation */}
+      <BottomNav />
+
       {/* Additional sections will be added below */}
     </main>
   )
