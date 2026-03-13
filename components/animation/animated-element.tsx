@@ -74,7 +74,8 @@ export function AnimatedElement({
       if (completeTimer) clearTimeout(completeTimer)
       if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
     }
-  }, [isActive, checkVisibility, completeStep, delay, duration, earlyTriggerAfter, step, triggerNextStepEarly])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive])
 
   const isVisible = isDone || hasAnimated || skipped
   const translateY = direction === "top" ? "-30px" : "30px"

@@ -89,7 +89,8 @@ export function AnimatedWords({
       if (interval) clearInterval(interval)
       if (completeTimer) clearTimeout(completeTimer)
     }
-  }, [isActive, checkVisibility, completeStep, delayBetweenWords, earlyTriggerAfter, startDelay, step, triggerNextStepEarly, words.length])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive])
 
   const translateY = direction === "top" ? "-20px" : "20px"
 

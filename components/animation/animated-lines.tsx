@@ -60,7 +60,8 @@ export function AnimatedLines({
       if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
       if (completeTimer) clearTimeout(completeTimer)
     }
-  }, [isActive, completeStep, delayBetweenLines, earlyTriggerAfter, lines.length, step, triggerNextStepEarly])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive])
 
   return (
     <div className={className}>
