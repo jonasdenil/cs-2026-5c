@@ -4,9 +4,9 @@ export function TopBar() {
   return (
     <header
       id="top-bar"
-      className="w-full bg-rustic-red pt-10 pb-4 px-6 md:px-12 lg:px-20"
+      className="w-full pt-10 pb-4 px-6 md:px-12 lg:px-16"
     >
-      <div className="flex items-center justify-between">
+      <div className="relative flex items-center justify-between">
         {/* Left: Name */}
         <span className="font-sans text-merino-white text-base font-medium uppercase">
           Charlotte Schaerlaecken
