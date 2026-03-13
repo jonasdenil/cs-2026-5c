@@ -6,21 +6,21 @@ export function PageLoader({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<"enter" | "visible" | "exit" | "done">("enter")
 
   useEffect(() => {
-    // Phase 1: Enter animation (move-in + fade-in) - 600ms
+    // Phase 1: Fade-in - 400ms
     const enterTimer = setTimeout(() => {
       setPhase("visible")
-    }, 600)
+    }, 400)
 
-    // Phase 2: Visible for 2 seconds
+    // Phase 2: Visible for 0.7 seconds
     const visibleTimer = setTimeout(() => {
       setPhase("exit")
-    }, 2600) // 600ms enter + 2000ms visible
+    }, 1100) // 400ms fade-in + 700ms visible
 
-    // Phase 3: Exit animation (move-out + fade-out) - 600ms
+    // Phase 3: Fade-out - 400ms
     const exitTimer = setTimeout(() => {
       setPhase("done")
       onComplete()
-    }, 3200) // 600ms enter + 2000ms visible + 600ms exit
+    }, 1500) // 400ms fade-in + 700ms visible + 400ms fade-out
 
     return () => {
       clearTimeout(enterTimer)
