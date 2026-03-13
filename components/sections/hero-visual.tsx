@@ -43,7 +43,7 @@ export function HeroVisual() {
 
         <a
           href="#contact"
-          className="inline-flex items-center gap-2 bg-ruby-red text-merino-white font-sans text-base font-medium uppercase rounded-full px-5 py-2 transition-colors duration-200 hover:bg-[#c40a19] focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-rustic-red"
+          className="inline-flex items-center gap-2 bg-ruby-red text-rustic-red font-sans text-base font-medium uppercase rounded-full px-3.5 py-1.5 transition-colors duration-200 hover:bg-[#c40a19] focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-rustic-red"
         >
           <Phone size={16} strokeWidth={2} />
           Hit My Pager
