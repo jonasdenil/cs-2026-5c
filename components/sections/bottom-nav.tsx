@@ -31,7 +31,7 @@ export function BottomNav() {
             <a
               href={item.href}
               onClick={() => setOpen(false)}
-              className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red"
+              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus:ring-2 focus:ring-ruby-red"
             >
               {item.label}
             </a>
@@ -72,21 +72,46 @@ export function BottomNav() {
           aria-label={open ? "Sluiten" : "Menu"}
           className="md:hidden flex items-center gap-2 px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red"
         >
-          {open ? "Sluiten" : "Menu"}
-          {open ? (
-            /* Close icon */
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          ) : (
-            /* Hamburger icon — 3 lines */
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          {/* Label — crossfades between Menu and Sluiten */}
+          <span className="relative inline-grid">
+            <span
+              className="col-start-1 row-start-1 transition-all duration-200"
+              style={{ opacity: open ? 0 : 1, transform: open ? "translateY(-4px)" : "translateY(0)" }}
+              aria-hidden={open}
+            >
+              Menu
+            </span>
+            <span
+              className="col-start-1 row-start-1 transition-all duration-200"
+              style={{ opacity: open ? 1 : 0, transform: open ? "translateY(0)" : "translateY(4px)" }}
+              aria-hidden={!open}
+            >
+              Sluiten
+            </span>
+          </span>
+
+          {/* Icon — crossfades between hamburger and close */}
+          <span className="relative inline-grid w-4 h-4">
+            {/* Hamburger */}
+            <svg
+              width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"
+              className="col-start-1 row-start-1 transition-all duration-200"
+              style={{ opacity: open ? 0 : 1, transform: open ? "rotate(90deg) scale(0.7)" : "rotate(0deg) scale(1)" }}
+            >
               <line x1="2" y1="4" x2="14" y2="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               <line x1="2" y1="12" x2="14" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
-          )}
+            {/* Close */}
+            <svg
+              width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"
+              className="col-start-1 row-start-1 transition-all duration-200"
+              style={{ opacity: open ? 1 : 0, transform: open ? "rotate(0deg) scale(1)" : "rotate(-90deg) scale(0.7)" }}
+            >
+              <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </span>
         </button>
       </div>
     </nav>
