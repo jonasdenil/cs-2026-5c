@@ -33,7 +33,7 @@ export function BottomNav() {
               <a
                 href={item.href}
                 className="
-                  block px-2.5 py-1.5
+                  block px-3.5 py-1.5
                   bg-rustic-red text-merino-white
                   font-sans text-base font-medium uppercase
                   rounded-full
