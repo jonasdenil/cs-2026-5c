@@ -6,21 +6,21 @@ export function PageLoader({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<"enter" | "visible" | "exit" | "done">("enter")
 
   useEffect(() => {
-    // Phase 1: Fade-in - 400ms
+    // Phase 1: Enter animation (move-in + fade-in) - 600ms
     const enterTimer = setTimeout(() => {
       setPhase("visible")
-    }, 400)
+    }, 600)
 
-    // Phase 2: Visible for 1 second
+    // Phase 2: Visible for 2 seconds
     const visibleTimer = setTimeout(() => {
       setPhase("exit")
-    }, 1400) // 400ms fade-in + 1000ms visible
+    }, 2600) // 600ms enter + 2000ms visible
 
-    // Phase 3: Fade-out - 400ms
+    // Phase 3: Exit animation (move-out + fade-out) - 600ms
     const exitTimer = setTimeout(() => {
       setPhase("done")
       onComplete()
-    }, 1800) // 400ms fade-in + 1000ms visible + 400ms fade-out
+    }, 3200) // 600ms enter + 2000ms visible + 600ms exit
 
     return () => {
       clearTimeout(enterTimer)
@@ -34,9 +34,15 @@ export function PageLoader({ onComplete }: { onComplete: () => void }) {
   return (
     <div className="fixed inset-0 z-[100] bg-rustic-red flex items-center justify-center">
       <div
-        className="transition-all duration-400 ease-out"
+        className="transition-all duration-500 ease-out"
         style={{
           opacity: phase === "enter" ? 0 : phase === "exit" ? 0 : 1,
+          transform:
+            phase === "enter"
+              ? "translateY(-60px)"
+              : phase === "exit"
+              ? "translateY(60px)"
+              : "translateY(0)",
         }}
       >
         {/* SC Monogram in Merino White */}
