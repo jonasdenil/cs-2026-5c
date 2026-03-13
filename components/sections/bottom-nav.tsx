@@ -33,10 +33,11 @@ export function BottomNav() {
   return (
     <nav
       id="bottom-nav"
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max transition-all duration-500 ease-out"
+      className="fixed bottom-6 left-1/2 z-50 w-max"
       style={{
         opacity: isVisible ? 1 : 0,
         transform: `translateX(-50%) translateY(${isVisible ? "0" : "30px"})`,
+        transition: "opacity 500ms ease-out, transform 500ms ease-out",
       }}
     >
 
