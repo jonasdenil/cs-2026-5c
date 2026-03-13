@@ -1,0 +1,115 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Bolota font for headings */
+@font-face {
+  font-family: 'Bolota';
+  src: url('/fonts/Bolota-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Charlotte Schaerlaecken Brand Colors */
+  --rustic-red: #551104;
+  --merino-white: #F2F1DF;
+  --ruby-red: #E60C1D;
+  --tea-rose: #F5C1CD;
+  --coral-reef: #C1BDA2;
+  
+  /* Semantic tokens mapped to brand */
+  --background: #551104;
+  --foreground: #F2F1DF;
+  --card: #551104;
+  --card-foreground: #F2F1DF;
+  --popover: #551104;
+  --popover-foreground: #F2F1DF;
+  --primary: #E60C1D;
+  --primary-foreground: #F2F1DF;
+  --secondary: #F2F1DF;
+  --secondary-foreground: #551104;
+  --muted: #C1BDA2;
+  --muted-foreground: #551104;
+  --accent: #F5C1CD;
+  --accent-foreground: #551104;
+  --destructive: #E60C1D;
+  --destructive-foreground: #F2F1DF;
+  --border: #C1BDA2;
+  --input: #C1BDA2;
+  --ring: #E60C1D;
+  --radius: 0.625rem;
+}
+
+/* Dark mode uses same brand colors - single brand identity */
+.dark {
+  --background: #551104;
+  --foreground: #F2F1DF;
+  --card: #551104;
+  --card-foreground: #F2F1DF;
+  --popover: #551104;
+  --popover-foreground: #F2F1DF;
+  --primary: #E60C1D;
+  --primary-foreground: #F2F1DF;
+  --secondary: #F2F1DF;
+  --secondary-foreground: #551104;
+  --muted: #C1BDA2;
+  --muted-foreground: #551104;
+  --accent: #F5C1CD;
+  --accent-foreground: #551104;
+  --destructive: #E60C1D;
+  --destructive-foreground: #F2F1DF;
+  --border: #C1BDA2;
+  --input: #C1BDA2;
+  --ring: #E60C1D;
+}
+
+@theme inline {
+  /* Typography */
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif: 'Bolota', Georgia, serif;
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  
+  /* Brand Colors */
+  --color-rustic-red: var(--rustic-red);
+  --color-merino-white: var(--merino-white);
+  --color-ruby-red: var(--ruby-red);
+  --color-tea-rose: var(--tea-rose);
+  --color-coral-reef: var(--coral-reef);
+  
+  /* Semantic Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
