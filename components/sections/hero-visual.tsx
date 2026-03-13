@@ -26,6 +26,7 @@ export function HeroVisual() {
             step="main-title"
             direction="bottom"
             delayBetweenWords={150}
+            earlyTriggerAfter={99999}
           />
           <AnimatedWords
             text="All Things Social"
@@ -33,7 +34,7 @@ export function HeroVisual() {
             direction="bottom"
             delayBetweenWords={150}
             startDelay={450}
-            earlyTriggerAfter={750}
+            earlyTriggerAfter={600}
           />
         </h1>
       </div>
