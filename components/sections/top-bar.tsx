@@ -8,7 +8,7 @@ export function TopBar() {
     >
       <div className="flex items-center justify-between">
         {/* Left: Name */}
-        <span className="font-sans text-merino-white text-base font-medium tracking-widest uppercase">
+        <span className="font-sans text-merino-white text-base font-medium uppercase">
           Charlotte Schaerlaecken
         </span>
 
@@ -25,7 +25,7 @@ export function TopBar() {
         </div>
 
         {/* Right: Title */}
-        <span className="font-sans text-merino-white text-base font-medium tracking-widest uppercase">
+        <span className="font-sans text-merino-white text-base font-medium uppercase">
           Creatief Strateeg
         </span>
       </div>
