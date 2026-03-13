@@ -10,6 +10,7 @@ interface AnimatedWordsProps {
   className?: string
   as?: "span" | "div" | "h1" | "p"
   delayBetweenWords?: number
+  earlyTriggerAfter?: number // ms after start to trigger next step (allows overlap)
 }
 
 export function AnimatedWords({
@@ -19,8 +20,9 @@ export function AnimatedWords({
   className = "",
   as: Component = "span",
   delayBetweenWords = 80,
+  earlyTriggerAfter,
 }: AnimatedWordsProps) {
-  const { isStepActive, isStepComplete, completeStep } = useAnimation()
+  const { isStepActive, isStepComplete, completeStep, triggerNextStepEarly } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
   const [skipped, setSkipped] = useState(false)
   const elementRef = useRef<HTMLElement>(null)
@@ -46,6 +48,14 @@ export function AnimatedWords({
       return
     }
 
+    // Early trigger for overlapping animations
+    let earlyTriggerTimer: NodeJS.Timeout | undefined
+    if (earlyTriggerAfter !== undefined) {
+      earlyTriggerTimer = setTimeout(() => {
+        triggerNextStepEarly(step)
+      }, earlyTriggerAfter)
+    }
+
     // Animate words one by one
     let count = 0
     const interval = setInterval(() => {
@@ -54,13 +64,19 @@ export function AnimatedWords({
       if (count >= words.length) {
         clearInterval(interval)
         // Complete after last word finishes its CSS transition (300ms)
-        setTimeout(() => {
-          completeStep(step)
-        }, 300)
+        // Only call completeStep if we didn't use earlyTrigger
+        if (earlyTriggerAfter === undefined) {
+          setTimeout(() => {
+            completeStep(step)
+          }, 300)
+        }
       }
     }, delayBetweenWords)
 
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
+    }
   }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
 
   const translateY = direction === "top" ? "-20px" : "20px"

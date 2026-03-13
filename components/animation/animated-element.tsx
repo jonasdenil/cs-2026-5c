@@ -11,6 +11,7 @@ interface AnimatedElementProps {
   duration?: number
   delay?: number
   easing?: string
+  earlyTriggerAfter?: number
 }
 
 export function AnimatedElement({
@@ -21,8 +22,9 @@ export function AnimatedElement({
   duration = 500,
   delay = 0,
   easing = "ease-out",
+  earlyTriggerAfter,
 }: AnimatedElementProps) {
-  const { isStepActive, isStepComplete, completeStep } = useAnimation()
+  const { isStepActive, isStepComplete, completeStep, triggerNextStepEarly } = useAnimation()
   const [hasAnimated, setHasAnimated] = useState(false)
   const [skipped, setSkipped] = useState(false)
   const elementRef = useRef<HTMLDivElement>(null)
@@ -46,17 +48,28 @@ export function AnimatedElement({
       return
     }
 
+    // Early trigger for overlapping animations
+    let earlyTriggerTimer: NodeJS.Timeout | undefined
+    if (earlyTriggerAfter !== undefined) {
+      earlyTriggerTimer = setTimeout(() => {
+        triggerNextStepEarly(step)
+      }, earlyTriggerAfter)
+    }
+
     const animateTimer = setTimeout(() => {
       setHasAnimated(true)
     }, delay)
 
-    const completeTimer = setTimeout(() => {
-      completeStep(step)
-    }, delay + duration)
+    const completeTimer = earlyTriggerAfter === undefined
+      ? setTimeout(() => {
+          completeStep(step)
+        }, delay + duration)
+      : undefined
 
     return () => {
       clearTimeout(animateTimer)
-      clearTimeout(completeTimer)
+      if (completeTimer) clearTimeout(completeTimer)
+      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
     }
   }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
 

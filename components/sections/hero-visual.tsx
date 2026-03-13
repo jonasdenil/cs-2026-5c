@@ -26,6 +26,7 @@ export function HeroVisual() {
             step="main-title"
             direction="bottom"
             delayBetweenWords={100}
+            earlyTriggerAfter={500}
           />
           <AnimatedWords
             text="All Things Social"
@@ -47,12 +48,14 @@ export function HeroVisual() {
           className="font-sans text-merino-white text-center uppercase max-w-2xl"
           lineClassName="text-lg"
           delayBetweenLines={200}
+          earlyTriggerAfter={300}
         />
 
         <AnimatedElement
           step="cta"
           direction="bottom"
           duration={400}
+          earlyTriggerAfter={200}
         >
           <a
             href="#contact"

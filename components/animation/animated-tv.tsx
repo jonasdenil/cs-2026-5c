@@ -5,8 +5,8 @@ import { useAnimation } from "./animation-context"
 import Image from "next/image"
 
 export function AnimatedTV() {
-  const { isStepActive, isStepComplete, completeStep } = useAnimation()
-  const [phase, setPhase] = useState<"hidden" | "moving" | "rotating" | "done">("hidden")
+  const { isStepActive, isStepComplete, triggerNextStepEarly } = useAnimation()
+  const [phase, setPhase] = useState<"hidden" | "moving" | "done">("hidden")
   const hasStartedRef = useRef(false)
   const isActive = isStepActive("tv")
   const isDone = isStepComplete("tv")
@@ -18,13 +18,19 @@ export function AnimatedTV() {
     // Start move-in animation (already rotated at 9deg)
     setPhase("moving")
 
-    // After move-in, mark as done
+    // Trigger next step early (after 400ms, halfway through TV animation)
+    // This allows the main-title to start while TV is still animating
+    const earlyTrigger = setTimeout(() => {
+      triggerNextStepEarly("tv")
+    }, 400)
+
+    // Mark TV as done after full animation
     const doneTimer = setTimeout(() => {
       setPhase("done")
-      completeStep("tv")
     }, 900)
 
     return () => {
+      clearTimeout(earlyTrigger)
       clearTimeout(doneTimer)
     }
   }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps

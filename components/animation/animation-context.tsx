@@ -22,6 +22,7 @@ interface AnimationContextType {
   isStepActive: (step: AnimationStep) => boolean
   isStepComplete: (step: AnimationStep) => boolean
   completeStep: (step: AnimationStep) => void
+  triggerNextStepEarly: (step: AnimationStep) => void
   loaderComplete: boolean
   setLoaderComplete: (complete: boolean) => void
 }
@@ -59,6 +60,17 @@ export function AnimationProvider({ children }: { children: ReactNode }) {
     [currentStep]
   )
 
+  // Trigger next step early - allows overlapping animations
+  const triggerNextStepEarly = useCallback(
+    (step: AnimationStep) => {
+      const stepIndex = ANIMATION_SEQUENCE.indexOf(step)
+      if (stepIndex === currentStep) {
+        setCurrentStep((prev) => prev + 1)
+      }
+    },
+    [currentStep]
+  )
+
   // Start sequence when loader completes
   const handleLoaderComplete = useCallback((complete: boolean) => {
     setLoaderComplete(complete)
@@ -74,6 +86,7 @@ export function AnimationProvider({ children }: { children: ReactNode }) {
         isStepActive,
         isStepComplete,
         completeStep,
+        triggerNextStepEarly,
         loaderComplete,
         setLoaderComplete: handleLoaderComplete,
       }}

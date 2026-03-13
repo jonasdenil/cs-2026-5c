@@ -9,6 +9,7 @@ interface AnimatedLinesProps {
   className?: string
   lineClassName?: string
   delayBetweenLines?: number
+  earlyTriggerAfter?: number
 }
 
 export function AnimatedLines({
@@ -17,8 +18,9 @@ export function AnimatedLines({
   className = "",
   lineClassName = "",
   delayBetweenLines = 150,
+  earlyTriggerAfter,
 }: AnimatedLinesProps) {
-  const { isStepActive, isStepComplete, completeStep } = useAnimation()
+  const { isStepActive, isStepComplete, completeStep, triggerNextStepEarly } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
   const hasStartedRef = useRef(false)
   const isActive = isStepActive(step)
@@ -28,19 +30,32 @@ export function AnimatedLines({
     if (!isActive || hasStartedRef.current) return
     hasStartedRef.current = true
 
+    // Early trigger for overlapping animations
+    let earlyTriggerTimer: NodeJS.Timeout | undefined
+    if (earlyTriggerAfter !== undefined) {
+      earlyTriggerTimer = setTimeout(() => {
+        triggerNextStepEarly(step)
+      }, earlyTriggerAfter)
+    }
+
     let count = 0
     const interval = setInterval(() => {
       count++
       setAnimatedCount(count)
       if (count >= lines.length) {
         clearInterval(interval)
-        setTimeout(() => {
-          completeStep(step)
-        }, 300)
+        if (earlyTriggerAfter === undefined) {
+          setTimeout(() => {
+            completeStep(step)
+          }, 300)
+        }
       }
     }, delayBetweenLines)
 
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      if (earlyTriggerTimer) clearTimeout(earlyTriggerTimer)
+    }
   }, [isActive]) // Only re-run when isActive changes — intentionally minimal deps
 
   return (
