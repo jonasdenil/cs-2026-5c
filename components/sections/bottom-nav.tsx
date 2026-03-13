@@ -4,8 +4,8 @@ import Image from "next/image"
 import { useState } from "react"
 
 const navItems = [
-  { label: "Cases", href: "#cases" },
   { label: "Who?", href: "#who" },
+  { label: "Cases", href: "#cases" },
   { label: "Hit My Pager", href: "#contact" },
 ]
 
