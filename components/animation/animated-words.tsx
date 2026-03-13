@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useAnimation, AnimationStep } from "./animation-context"
 
 interface AnimatedWordsProps {
@@ -22,11 +22,22 @@ export function AnimatedWords({
 }: AnimatedWordsProps) {
   const { isStepActive, isStepComplete, completeStep } = useAnimation()
   const [animatedCount, setAnimatedCount] = useState(0)
+  const elementRef = useRef<HTMLElement>(null)
   const words = text.split(" ")
   const isActive = isStepActive(step)
   const isDone = isStepComplete(step)
 
   useEffect(() => {
+    // Check if element is visible (not hidden via CSS)
+    if (isActive && elementRef.current) {
+      const isHidden = window.getComputedStyle(elementRef.current).display === "none"
+      if (isHidden) {
+        // Skip this step immediately if element is hidden
+        completeStep(step)
+        return
+      }
+    }
+
     if (isActive && animatedCount < words.length) {
       const timer = setTimeout(() => {
         setAnimatedCount((prev) => prev + 1)
@@ -44,7 +55,7 @@ export function AnimatedWords({
   const translateY = direction === "top" ? "-20px" : "20px"
 
   return (
-    <Component className={className}>
+    <Component ref={elementRef as React.RefObject<HTMLSpanElement>} className={className}>
       {words.map((word, index) => {
         const isWordVisible = isDone || (isActive && index < animatedCount)
         return (

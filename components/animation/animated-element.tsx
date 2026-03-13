@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, ReactNode } from "react"
+import { useEffect, useState, ReactNode, useRef } from "react"
 import { useAnimation, AnimationStep } from "./animation-context"
 
 interface AnimatedElementProps {
@@ -24,10 +24,21 @@ export function AnimatedElement({
 }: AnimatedElementProps) {
   const { isStepActive, isStepComplete, completeStep } = useAnimation()
   const [hasAnimated, setHasAnimated] = useState(false)
+  const elementRef = useRef<HTMLDivElement>(null)
   const isActive = isStepActive(step)
   const isDone = isStepComplete(step)
 
   useEffect(() => {
+    // Check if element is visible (not hidden via CSS)
+    if (isActive && elementRef.current) {
+      const isHidden = window.getComputedStyle(elementRef.current).display === "none"
+      if (isHidden) {
+        // Skip this step immediately if element is hidden
+        completeStep(step)
+        return
+      }
+    }
+
     if (isActive && !hasAnimated) {
       // Start animation
       const animateTimer = setTimeout(() => {
@@ -51,6 +62,7 @@ export function AnimatedElement({
 
   return (
     <div
+      ref={elementRef}
       className={className}
       style={{
         opacity: isVisible ? 1 : 0,
