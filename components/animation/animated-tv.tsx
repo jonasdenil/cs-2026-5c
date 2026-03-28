@@ -4,8 +4,8 @@ import { useEffect, useState, useRef } from "react"
 import { useAnimation } from "./animation-context"
 import Image from "next/image"
 
-// How much slower the TV scrolls relative to the page (0 = no parallax, 1 = stays fixed)
-const PARALLAX_FACTOR = 0.3
+// How much faster the TV scrolls relative to the page (higher = disappears faster)
+const PARALLAX_FACTOR = 0.8
 
 export function AnimatedTV() {
   const { isStepActive, isStepComplete, triggerNextStepEarly } = useAnimation()
