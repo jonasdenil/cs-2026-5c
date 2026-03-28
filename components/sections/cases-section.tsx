@@ -29,6 +29,8 @@ function CasePlaceholder({ label, delay }: { label: string; delay: number }) {
   )
 }
 
+const VITRINE_WORDS = ["In", "de", "vitrine"]
+
 export function CasesSection() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollReveal({ threshold: 0.2, rootMargin: "0px 0px -15% 0px" })
 
@@ -36,17 +38,22 @@ export function CasesSection() {
     <section id="cases" className="w-full bg-merino-white">
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 py-24 md:py-32 flex flex-col gap-14">
 
-        {/* Centered title */}
+        {/* Centered staggered title */}
         <h2
           ref={titleRef as React.RefObject<HTMLHeadingElement>}
           className="font-serif uppercase text-center text-coral-reef leading-none"
-          style={{
-            fontSize: "clamp(2.5rem, 6vw, 5rem)",
-            fontWeight: 700,
-            ...revealStyle(titleVisible),
-          }}
+          style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: 700 }}
+          aria-label="In de vitrine"
         >
-          In de vitrine
+          {VITRINE_WORDS.map((word, i) => (
+            <span key={word} className="inline-block mr-[0.25em] last:mr-0" style={{
+              opacity: titleVisible ? 1 : 0,
+              transform: titleVisible ? "translateY(0)" : "translateY(28px)",
+              transition: `opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) ${i * 130}ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) ${i * 130}ms`,
+            }}>
+              {word}
+            </span>
+          ))}
         </h2>
 
         {/* 2×2 case grid */}
