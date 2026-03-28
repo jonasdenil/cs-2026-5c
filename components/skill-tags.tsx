@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, type RefObject } from "react"
 import { createPortal } from "react-dom"
 import { X, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -68,14 +68,15 @@ function DesktopModal({
   origin: OriginRect
   onClose: () => void
 }) {
-  // Two phases: "start" (at tag) → "open" (centred + expanded, simultaneously)
   type Phase = "start" | "open" | "closing"
   const [phase, setPhase] = useState<Phase>("start")
   const [mounted, setMounted] = useState(false)
+  // Snapshot the card's actual position the moment close is triggered
+  const [closeFrom, setCloseFrom] = useState<{ top: number; left: number; width: number } | null>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
-    // One tick to paint the start position, then immediately transition to open
     const t1 = setTimeout(() => setPhase("open"), 20)
     return () => clearTimeout(t1)
   }, [])
@@ -88,18 +89,27 @@ function DesktopModal({
   }, [])
 
   const handleClose = useCallback(() => {
-    setPhase("closing")
-    setTimeout(onClose, 400)
+    // Snapshot the current rendered position of the card before any state change
+    if (cardRef.current) {
+      const r = cardRef.current.getBoundingClientRect()
+      setCloseFrom({ top: r.top + r.height / 2, left: r.left + r.width / 2, width: r.width })
+    }
+    // Let the snapshot render (no transition yet), then start animating to origin
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setPhase("closing")
+        setTimeout(onClose, 460)
+      })
+    })
   }, [onClose])
 
   const vw = typeof window !== "undefined" ? window.innerWidth : 1200
   const vh = typeof window !== "undefined" ? window.innerHeight : 800
   const expandedW = Math.min(480, vw - 48)
+  const easing = "cubic-bezier(0.4, 0, 0.2, 1)"
+  const duration = "440ms"
 
   const getCardStyle = (): React.CSSProperties => {
-    const easing = "cubic-bezier(0.4, 0, 0.2, 1)"
-    const duration = "420ms"
-
     if (phase === "start") {
       return {
         position: "fixed",
@@ -112,7 +122,8 @@ function DesktopModal({
       }
     }
 
-    if (phase === "closing") {
+    if (phase === "closing" && closeFrom) {
+      // Animate FROM the snapshotted position TO the origin tag position
       return {
         position: "fixed",
         top: origin.top + origin.height / 2,
@@ -124,7 +135,20 @@ function DesktopModal({
       }
     }
 
-    // "open" — move to centre and expand width simultaneously
+    // Snapshot frame when closing starts — no transition, exact current position
+    if (phase === "closing" && !closeFrom) {
+      return {
+        position: "fixed",
+        top: vh / 2,
+        left: vw / 2,
+        width: expandedW,
+        transform: `translate(-50%, -50%) rotate(0deg)`,
+        transition: "none",
+        zIndex: 60,
+      }
+    }
+
+    // "open"
     return {
       position: "fixed",
       top: vh / 2,
@@ -147,16 +171,16 @@ function DesktopModal({
       <div
         className={cn(
           "absolute inset-0 bg-rustic-red/70 backdrop-blur-md",
-          "transition-opacity duration-400",
+          "transition-opacity duration-[440ms]",
           phase === "start" || isClosing ? "opacity-0" : "opacity-100"
         )}
         onClick={handleClose}
       />
 
       {/* Animated card */}
-      <div style={getCardStyle()}>
+      <div ref={cardRef} style={getCardStyle()}>
         <div className="bg-merino-white rounded-2xl overflow-hidden shadow-2xl">
-          {/* Title row with close icon */}
+          {/* Title row with +/× icon */}
           <button
             onClick={handleClose}
             aria-label="Sluiten"
@@ -173,24 +197,32 @@ function DesktopModal({
               strokeWidth={2.5}
               className="flex-shrink-0 text-rustic-red self-center"
               style={{
-                transition: "transform 420ms cubic-bezier(0.4,0,0.2,1)",
+                transition: "transform 440ms cubic-bezier(0.4,0,0.2,1)",
                 transform: isOpen && !isClosing ? "rotate(45deg)" : "rotate(0deg)",
               }}
             />
           </button>
 
-          {/* Description — slides open simultaneously with movement */}
+          {/* Description — slides open/closed with card movement */}
           <div
-            className="overflow-hidden"
+            className="grid"
             style={{
-              maxHeight: isOpen && !isClosing ? "300px" : "0px",
-              opacity: isOpen && !isClosing ? 1 : 0,
-              transition: "max-height 420ms cubic-bezier(0.4,0,0.2,1), opacity 300ms ease-out",
+              gridTemplateRows: isOpen && !isClosing ? "1fr" : "0fr",
+              transition: `grid-template-rows ${duration} ${easing}`,
             }}
           >
-            <p className="px-7 pb-7 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed">
-              {skill.description}
-            </p>
+            <div className="overflow-hidden">
+              <p
+                className="px-7 pb-7 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
+                style={{
+                  opacity: isOpen && !isClosing ? 1 : 0,
+                  transition: `opacity 300ms ${easing}`,
+                  transitionDelay: isOpen ? "80ms" : "0ms",
+                }}
+              >
+                {skill.description}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -412,14 +444,13 @@ function MobileButton({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       className={cn(
         "absolute bottom-5 left-1/2 -translate-x-1/2 md:hidden",
-        "px-5 py-3 bg-merino-white text-rustic-red font-serif font-bold text-sm uppercase rounded-full",
-        "flex items-center gap-2 shadow-lg",
-        "transition-all duration-200 hover:scale-105",
+        "inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-medium uppercase rounded-full px-3.5 py-1.5",
+        "transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
       )}
     >
-      Mijn creatieve stack
-      <Plus size={18} strokeWidth={2.5} />
+      Creatieve stack
+      <Plus size={16} strokeWidth={2} />
     </button>
   )
 }
