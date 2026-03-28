@@ -70,7 +70,7 @@ export function WhoSection() {
           >
             <h2
               className="font-serif text-merino-white uppercase leading-none"
-              style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700 }}
+              style={{ fontSize: "76px", fontWeight: 700 }}
             >
               Mijn creatieve stack
             </h2>
