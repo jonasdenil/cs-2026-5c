@@ -158,7 +158,7 @@ function DesktopModal({
           >
             <h3
               className="font-serif font-bold text-rustic-red uppercase text-xl whitespace-nowrap"
-              style={{ lineHeight: 1 }}
+              style={{ lineHeight: 1, paddingTop: "4px" }}
             >
               {skill.title}
             </h3>
