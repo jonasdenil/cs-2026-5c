@@ -155,52 +155,39 @@ function DesktopModal({
 
       {/* Animated card */}
       <div style={getCardStyle()}>
-        <div className="bg-merino-white rounded-xl overflow-hidden shadow-2xl">
-          {/* Title — size stays constant */}
-          <div className="px-6 py-4">
-            <h3 className="font-serif font-bold text-rustic-red uppercase text-base leading-tight whitespace-nowrap">
+        <div className="bg-merino-white rounded-2xl overflow-hidden shadow-2xl">
+          {/* Title row with close icon */}
+          <button
+            onClick={handleClose}
+            aria-label="Sluiten"
+            className="w-full px-7 py-5 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+          >
+            <h3 className="font-serif font-bold text-rustic-red uppercase text-lg leading-tight whitespace-nowrap">
               {skill.title}
             </h3>
-          </div>
+            <span
+              className="flex-shrink-0 text-rustic-red transition-transform duration-300"
+              style={{ transform: isOpen && !isClosing ? "rotate(45deg)" : "rotate(0deg)" }}
+            >
+              <Plus size={24} strokeWidth={2.5} />
+            </span>
+          </button>
 
           {/* Description — slides open simultaneously with movement */}
           <div
             className="overflow-hidden"
             style={{
-              maxHeight: isOpen && !isClosing ? "260px" : "0px",
+              maxHeight: isOpen && !isClosing ? "300px" : "0px",
               opacity: isOpen && !isClosing ? 1 : 0,
               transition: "max-height 420ms cubic-bezier(0.4,0,0.2,1), opacity 300ms ease-out",
             }}
           >
-            <p className="px-6 pb-6 pt-0 font-sans text-rustic-red/80 text-sm md:text-base leading-relaxed">
+            <p className="px-7 pb-7 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed">
               {skill.description}
             </p>
           </div>
         </div>
       </div>
-
-      {/* Close button */}
-      <button
-        onClick={handleClose}
-        aria-label="Sluiten"
-        className={cn(
-          "fixed left-1/2 -translate-x-1/2 z-[61]",
-          "w-12 h-12 rounded-full border-2 border-merino-white",
-          "flex items-center justify-center text-merino-white",
-          "transition-all duration-300 ease-out",
-          "hover:bg-merino-white hover:text-rustic-red",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red",
-          isOpen && !isClosing
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-4 pointer-events-none"
-        )}
-        style={{
-          top: "calc(50% + 160px)",
-          transitionDelay: isOpen ? "200ms" : "0ms",
-        }}
-      >
-        <X size={22} strokeWidth={2} />
-      </button>
     </div>,
     document.body
   )
@@ -241,8 +228,8 @@ function SkillTag({
       ref={btnRef}
       onClick={handleClick}
       className={cn(
-        "absolute px-4 py-2 bg-merino-white text-rustic-red font-serif font-bold",
-        "text-base uppercase rounded-xl cursor-pointer shadow-md",
+        "absolute flex items-center gap-2.5 px-5 py-3 bg-merino-white text-rustic-red font-serif font-bold",
+        "text-lg uppercase rounded-2xl cursor-pointer shadow-md",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
       )}
       style={{
@@ -261,6 +248,7 @@ function SkillTag({
       }}
     >
       {skill.title}
+      <Plus size={18} strokeWidth={2.5} className="flex-shrink-0" />
     </button>
   )
 }
