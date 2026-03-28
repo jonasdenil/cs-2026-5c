@@ -162,15 +162,21 @@ function DesktopModal({
             aria-label="Sluiten"
             className="w-full px-7 py-5 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
           >
-            <h3 className="font-serif font-bold text-rustic-red uppercase text-lg leading-tight whitespace-nowrap">
+            <h3
+              className="font-serif font-bold text-rustic-red uppercase text-lg whitespace-nowrap"
+              style={{ lineHeight: 1 }}
+            >
               {skill.title}
             </h3>
-            <span
-              className="flex-shrink-0 text-rustic-red transition-transform duration-300"
-              style={{ transform: isOpen && !isClosing ? "rotate(45deg)" : "rotate(0deg)" }}
-            >
-              <Plus size={24} strokeWidth={2.5} />
-            </span>
+            <Plus
+              size={24}
+              strokeWidth={2.5}
+              className="flex-shrink-0 text-rustic-red self-center"
+              style={{
+                transition: "transform 420ms cubic-bezier(0.4,0,0.2,1)",
+                transform: isOpen && !isClosing ? "rotate(45deg)" : "rotate(0deg)",
+              }}
+            />
           </button>
 
           {/* Description — slides open simultaneously with movement */}
@@ -247,8 +253,8 @@ function SkillTag({
         (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"
       }}
     >
-      {skill.title}
-      <Plus size={18} strokeWidth={2.5} className="flex-shrink-0" />
+      <span style={{ lineHeight: 1, display: "block" }}>{skill.title}</span>
+      <Plus size={18} strokeWidth={2.5} className="flex-shrink-0 self-center" />
     </button>
   )
 }
@@ -269,46 +275,60 @@ function MobileSkillItem({
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setIsVisible(true), 60 + index * 80)
+    const t = setTimeout(() => setIsVisible(true), 60 + index * 90)
     return () => clearTimeout(t)
   }, [index])
 
   return (
     <div
-      className={cn(
-        "w-full transition-all duration-500 ease-out",
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-      )}
+      className="w-full bg-merino-white rounded-xl overflow-hidden shadow-sm"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translateY(0)" : "translateY(12px)",
+        transition: `opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1)`,
+        transitionDelay: `${index * 90}ms`,
+      }}
     >
       <button
         onClick={onClick}
         className={cn(
-          "w-full px-5 py-4 bg-merino-white text-rustic-red font-serif font-bold text-base uppercase",
-          "flex items-center justify-between",
-          "transition-colors duration-200",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red",
-          isOpen ? "rounded-t-xl" : "rounded-xl"
+          "w-full px-5 bg-merino-white text-rustic-red font-serif font-bold text-base uppercase",
+          "flex items-center justify-between gap-4",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
         )}
+        style={{ paddingTop: "1.1rem", paddingBottom: "1rem" }}
       >
-        {skill.title}
+        <span style={{ lineHeight: 1, display: "block" }}>{skill.title}</span>
         <Plus
           size={20}
           strokeWidth={2.5}
-          className={cn(
-            "flex-shrink-0 transition-transform duration-300",
-            isOpen && "rotate-45"
-          )}
+          className="flex-shrink-0"
+          style={{
+            transition: "transform 500ms cubic-bezier(0.4,0,0.2,1)",
+            transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
+          }}
         />
       </button>
+      {/* Grid trick for smooth height animation */}
       <div
-        className={cn(
-          "overflow-hidden transition-all duration-350 ease-out bg-merino-white rounded-b-xl",
-          isOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
-        )}
+        className="grid"
+        style={{
+          gridTemplateRows: isOpen ? "1fr" : "0fr",
+          transition: "grid-template-rows 550ms cubic-bezier(0.4,0,0.2,1)",
+        }}
       >
-        <p className="px-5 pb-5 pt-1 font-sans text-rustic-red/80 text-sm leading-relaxed">
-          {skill.description}
-        </p>
+        <div className="overflow-hidden">
+          <p
+            className="px-5 pb-5 pt-1 font-sans text-rustic-red/80 text-sm leading-relaxed"
+            style={{
+              opacity: isOpen ? 1 : 0,
+              transition: "opacity 400ms cubic-bezier(0.4,0,0.2,1)",
+              transitionDelay: isOpen ? "120ms" : "0ms",
+            }}
+          >
+            {skill.description}
+          </p>
+        </div>
       </div>
     </div>
   )
