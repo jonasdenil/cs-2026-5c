@@ -66,7 +66,7 @@ export function BottomNav() {
             <a
               href={item.href}
               onClick={(e) => handleNavClick(e, item.href)}
-              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus:ring-2 focus:ring-ruby-red"
+              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none"
             >
               {item.label}
             </a>
@@ -98,7 +98,7 @@ export function BottomNav() {
               <a
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
-                className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 ease-out hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-merino-white"
+                className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 ease-out hover:bg-ruby-red focus:outline-none"
               >
                 {item.label}
               </a>
