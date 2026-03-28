@@ -155,11 +155,11 @@ function DesktopModal({
           <button
             onClick={handleClose}
             aria-label="Sluiten"
-            className="w-full px-8 pt-10 pb-8 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+            className="w-full px-6 pt-3.5 pb-3.5 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
           >
             <h3
               className="font-serif font-bold text-rustic-red uppercase text-xl whitespace-nowrap"
-              style={{ lineHeight: 1, paddingTop: "8px" }}
+              style={{ lineHeight: 1, paddingTop: "6px" }}
             >
               {skill.title}
             </h3>
@@ -184,7 +184,7 @@ function DesktopModal({
           >
             <div className="overflow-hidden">
               <p
-                className="px-8 pb-8 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
+                className="px-6 pb-3.5 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
                 style={{
                   opacity: isOpen ? 1 : 0,
                   transition: `opacity 300ms ${easing}`,
