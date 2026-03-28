@@ -19,7 +19,7 @@ const skills: Skill[] = [
     title: "Social Strateeg",
     description:
       "Sterke online content begint met een sterk idee. Ik vertaal strategie naar creatieve concepten, formats en campagnes die mensen echt willen zien en delen.",
-    position: { top: "72%", left: "58%" },
+    position: { top: "58%", left: "54%" },
     rotation: 8,
   },
   {
@@ -27,15 +27,15 @@ const skills: Skill[] = [
     title: "Merkstrateeg",
     description:
       "Ik help merken en de mensen erachter hun stem vinden, zodat hun verhaal online even sterk klinkt als in het echt.",
-    position: { top: "52%", left: "8%" },
-    rotation: -6,
+    position: { top: "52%", left: "20%" },
+    rotation: 6,
   },
   {
     id: "sparpartner",
     title: "Sparpartner",
     description:
       "Tijdens brainstorms schuif ik mee aan tafel met een frisse strategische blik en help ik nieuwe inzichten bovenhalen. En ook aan de zijlijn denk ik mee, via mail, telefoon of gewoon fysiek op kantoor.",
-    position: { top: "68%", left: "28%" },
+    position: { top: "62%", left: "38%" },
     rotation: -10,
   },
   {
@@ -43,7 +43,7 @@ const skills: Skill[] = [
     title: "Workshop Facilitator",
     description:
       "De beste ideeën zitten vaak al in het team. Ik faciliteer workshops die inzichten bovenhalen en ideeën vertalen naar een duidelijke richting.",
-    position: { top: "20%", left: "62%" },
+    position: { top: "32%", left: "58%" },
     rotation: 4,
   },
 ]
