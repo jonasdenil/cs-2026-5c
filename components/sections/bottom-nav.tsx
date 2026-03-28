@@ -74,7 +74,7 @@ export function BottomNav() {
         ))}
       </ul>
 
-      <div className="flex items-center gap-3 bg-merino-white rounded-full px-4 py-3 shadow-lg whitespace-nowrap outline outline-1 outline-coral-reef">
+      <div className="flex items-center gap-3 bg-merino-white rounded-full px-4 py-3 shadow-lg whitespace-nowrap outline outline-1 outline-coral-reef/50">
         {/* SC Logo — links to hero */}
         <a
           href="#hero"
