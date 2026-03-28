@@ -36,10 +36,10 @@ function SmileyCsShape() {
 }
 
 export function WhoSection() {
-  const { ref: photoRef, isVisible: photoVisible } = useScrollReveal({ threshold: 0.1 })
-  const { ref: titleRef, isVisible: titleVisible } = useScrollReveal({ threshold: 0.2 })
-  const { ref: textRef, isVisible: textVisible } = useScrollReveal({ threshold: 0.2 })
-  const { ref: ctaRef, isVisible: ctaVisible } = useScrollReveal({ threshold: 0.2 })
+  const { ref: photoRef, isVisible: photoVisible } = useScrollReveal({ threshold: 0.15, rootMargin: "0px 0px -20% 0px" })
+  const { ref: titleRef, isVisible: titleVisible } = useScrollReveal({ threshold: 0.2, rootMargin: "0px 0px -15% 0px" })
+  const { ref: textRef, isVisible: textVisible } = useScrollReveal({ threshold: 0.15, rootMargin: "0px 0px -15% 0px" })
+  const { ref: ctaRef, isVisible: ctaVisible } = useScrollReveal({ threshold: 0.15, rootMargin: "0px 0px -10% 0px" })
 
   return (
     <section id="who" className="w-full">

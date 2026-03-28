@@ -11,7 +11,7 @@ const CASES = [
 ]
 
 function CasePlaceholder({ label, delay }: { label: string; delay: number }) {
-  const { ref, isVisible } = useScrollReveal({ threshold: 0.1, delay })
+  const { ref, isVisible } = useScrollReveal({ threshold: 0.15, delay, rootMargin: "0px 0px -12% 0px" })
 
   return (
     <div
@@ -30,7 +30,7 @@ function CasePlaceholder({ label, delay }: { label: string; delay: number }) {
 }
 
 export function CasesSection() {
-  const { ref: titleRef, isVisible: titleVisible } = useScrollReveal({ threshold: 0.2 })
+  const { ref: titleRef, isVisible: titleVisible } = useScrollReveal({ threshold: 0.2, rootMargin: "0px 0px -15% 0px" })
 
   return (
     <section id="cases" className="w-full bg-merino-white">
