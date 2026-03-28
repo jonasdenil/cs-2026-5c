@@ -11,7 +11,7 @@ export function HeroVisual() {
     <div id="hero-visual" className="pt-24">
 
       {/* TV + Title stacking block */}
-      <div className="relative flex items-center justify-center min-h-[600px]">
+      <div className="relative flex items-center justify-center">
 
         {/* TV image — behind the text */}
         <AnimatedTV />

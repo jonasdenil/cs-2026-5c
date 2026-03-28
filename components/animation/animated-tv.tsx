@@ -35,29 +35,27 @@ export function AnimatedTV() {
     }
   }, [isActive])
 
-  const containerRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
-    const handleScroll = () => {
-      const el = containerRef.current
-      if (!el) return
+    const element = document.querySelector('[data-parallax-tv]') as HTMLElement
+    if (!element) return
 
-      // Get the natural position of the element relative to the document
-      const rect = el.getBoundingClientRect()
+    const handleScroll = () => {
+      // Use getBoundingClientRect for better mobile compatibility
+      const rect = element.getBoundingClientRect()
+      const elementTop = rect.top
       const windowHeight = window.innerHeight
 
-      // Only apply parallax while the element is still in view
-      // Once it scrolls out of view (rect.bottom < 0), stop updating
-      if (rect.bottom < 0 || rect.top > windowHeight) return
+      // Calculate offset based on element position in viewport
+      // When element is at bottom of viewport (scrolled down), parallaxY increases
+      const scrollRatio = 1 - elementTop / windowHeight
+      const parallaxOffset = scrollRatio * (window.scrollY * PARALLAX_FACTOR)
 
-      // Offset relative to how far into the viewport the element has scrolled
-      // This keeps the parallax local to the element, not the full page scroll
-      const offset = (windowHeight - rect.top) * PARALLAX_FACTOR * -0.3
-
-      setParallaxY(offset)
+      setParallaxY(parallaxOffset)
     }
 
+    // Use passive listener for better scroll performance
     window.addEventListener("scroll", handleScroll, { passive: true })
+    // Also handle on mount to set initial state
     handleScroll()
 
     return () => window.removeEventListener("scroll", handleScroll)
@@ -70,7 +68,6 @@ export function AnimatedTV() {
 
   return (
     <div
-      ref={containerRef}
       className="relative z-0 w-full md:w-3/4 lg:w-1/2 mx-auto"
       data-parallax-tv
       style={{
