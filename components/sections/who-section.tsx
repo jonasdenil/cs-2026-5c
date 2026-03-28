@@ -69,10 +69,10 @@ export function WhoSection() {
             style={revealStyle(titleVisible)}
           >
             <h2
-              className="font-serif text-merino-white uppercase leading-none"
-              style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700 }}
+              className="font-serif text-merino-white uppercase leading-none text-[clamp(2.5rem,8vw,5.625rem)]"
+              style={{ fontWeight: 700 }}
             >
-              Mijn creatieve stack
+              Mijn<br />creatieve<br />stack
             </h2>
           </div>
 
