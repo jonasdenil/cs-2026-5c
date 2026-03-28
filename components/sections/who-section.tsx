@@ -36,6 +36,28 @@ function SmileyCsShape() {
   )
 }
 
+const WHO_TITLE_WORDS = ["Mijn", "creatieve", "stack"]
+
+function WhoStaggeredTitle({ isVisible }: { isVisible: boolean }) {
+  return (
+    <h2
+      className="font-serif text-merino-white uppercase leading-none text-[clamp(1.75rem,5vw,3.5rem)]"
+      style={{ fontWeight: 700 }}
+      aria-label="Mijn creatieve stack"
+    >
+      {WHO_TITLE_WORDS.map((word, i) => (
+        <span key={word} className="block" style={{
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? "translateY(0)" : "translateY(28px)",
+          transition: `opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) ${120 + i * 130}ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) ${120 + i * 130}ms`,
+        }}>
+          {word}
+        </span>
+      ))}
+    </h2>
+  )
+}
+
 export function WhoSection() {
   const { ref: photoRef, isVisible: photoVisible } = useScrollReveal({ threshold: 0.15, rootMargin: "0px 0px -20% 0px" })
   const { ref: titleRef, isVisible: titleVisible } = useScrollReveal({ threshold: 0.2, rootMargin: "0px 0px -15% 0px" })
@@ -67,16 +89,8 @@ export function WhoSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 pb-24">
 
           {/* Left: Title */}
-          <div
-            ref={titleRef as React.RefObject<HTMLDivElement>}
-            style={revealStyle(titleVisible)}
-          >
-            <h2
-              className="font-serif text-merino-white uppercase leading-none text-[clamp(1.75rem,5vw,3.5rem)]"
-              style={{ fontWeight: 700 }}
-            >
-              Mijn<br />creatieve<br />stack
-            </h2>
+          <div ref={titleRef as React.RefObject<HTMLDivElement>}>
+            <WhoStaggeredTitle isVisible={titleVisible} />
           </div>
 
           {/* Right: Text + CTA row */}
