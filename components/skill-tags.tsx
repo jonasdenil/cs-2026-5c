@@ -155,7 +155,7 @@ function DesktopModal({
           <button
             onClick={handleClose}
             aria-label="Sluiten"
-            className="w-full px-8 pt-12 pb-6 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+            className="w-full px-8 pt-10 pb-8 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
           >
             <h3
               className="font-serif font-bold text-rustic-red uppercase text-xl whitespace-nowrap"
@@ -184,7 +184,7 @@ function DesktopModal({
           >
             <div className="overflow-hidden">
               <p
-                className="px-8 pb-6 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
+                className="px-8 pb-8 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
                 style={{
                   opacity: isOpen ? 1 : 0,
                   transition: `opacity 300ms ${easing}`,
@@ -259,7 +259,7 @@ function SkillTag({
         (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"
       }}
     >
-      <span style={{ lineHeight: 1, display: "block" }}>{skill.title}</span>
+      <span style={{ lineHeight: 1, display: "block", paddingTop: "6px" }}>{skill.title}</span>
       <Plus size={18} strokeWidth={2.5} className="flex-shrink-0 self-center" />
     </button>
   )
