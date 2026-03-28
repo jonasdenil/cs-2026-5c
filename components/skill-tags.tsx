@@ -68,47 +68,33 @@ function DesktopModal({
   origin: OriginRect
   onClose: () => void
 }) {
+  // "start" = at tag position, "open" = centred + expanded, "closing" = fade-out in place
   type Phase = "start" | "open" | "closing"
   const [phase, setPhase] = useState<Phase>("start")
   const [mounted, setMounted] = useState(false)
-  // Snapshot the card's actual position the moment close is triggered
-  const [closeFrom, setCloseFrom] = useState<{ top: number; left: number; width: number } | null>(null)
-  const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
-    const t1 = setTimeout(() => setPhase("open"), 20)
-    return () => clearTimeout(t1)
+    const t = setTimeout(() => setPhase("open"), 20)
+    return () => clearTimeout(t)
   }, [])
 
   useEffect(() => {
     document.body.style.overflow = "hidden"
-    return () => {
-      document.body.style.overflow = ""
-    }
+    return () => { document.body.style.overflow = "" }
   }, [])
 
   const handleClose = useCallback(() => {
-    // Snapshot the current rendered position of the card before any state change
-    if (cardRef.current) {
-      const r = cardRef.current.getBoundingClientRect()
-      setCloseFrom({ top: r.top + r.height / 2, left: r.left + r.width / 2, width: r.width })
-    }
-    // Let the snapshot render (no transition yet), then start animating to origin
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setPhase("closing")
-        setTimeout(onClose, 460)
-      })
-    })
+    setPhase("closing")
+    setTimeout(onClose, 380)
   }, [onClose])
 
   const vw = typeof window !== "undefined" ? window.innerWidth : 1200
   const vh = typeof window !== "undefined" ? window.innerHeight : 800
-  const expandedW = Math.min(480, vw - 48)
+  const expandedW = Math.min(500, vw - 48)
   const easing = "cubic-bezier(0.4, 0, 0.2, 1)"
-  const duration = "440ms"
 
+  // Card wrapper style: only handles position + size + rotation
   const getCardStyle = (): React.CSSProperties => {
     if (phase === "start") {
       return {
@@ -121,41 +107,16 @@ function DesktopModal({
         zIndex: 60,
       }
     }
-
-    if (phase === "closing" && closeFrom) {
-      // Animate FROM the snapshotted position TO the origin tag position
-      return {
-        position: "fixed",
-        top: origin.top + origin.height / 2,
-        left: origin.left + origin.width / 2,
-        width: origin.width,
-        transform: `translate(-50%, -50%) rotate(${skill.rotation}deg)`,
-        transition: `top ${duration} ${easing}, left ${duration} ${easing}, width ${duration} ${easing}, transform ${duration} ${easing}`,
-        zIndex: 60,
-      }
-    }
-
-    // Snapshot frame when closing starts — no transition, exact current position
-    if (phase === "closing" && !closeFrom) {
-      return {
-        position: "fixed",
-        top: vh / 2,
-        left: vw / 2,
-        width: expandedW,
-        transform: `translate(-50%, -50%) rotate(0deg)`,
-        transition: "none",
-        zIndex: 60,
-      }
-    }
-
-    // "open"
+    // Both "open" and "closing" share the same centred position — no jump possible
     return {
       position: "fixed",
       top: vh / 2,
       left: vw / 2,
       width: expandedW,
       transform: `translate(-50%, -50%) rotate(0deg)`,
-      transition: `top ${duration} ${easing}, left ${duration} ${easing}, width ${duration} ${easing}, transform ${duration} ${easing}`,
+      transition: phase === "open"
+        ? `top 440ms ${easing}, left 440ms ${easing}, width 440ms ${easing}, transform 440ms ${easing}`
+        : "none",
       zIndex: 60,
     }
   }
@@ -165,57 +126,66 @@ function DesktopModal({
   const isOpen = phase === "open"
   const isClosing = phase === "closing"
 
+  // The entire modal (backdrop + card) fades as one unit when closing
+  const wrapperOpacity = isClosing ? 0 : 1
+
   return createPortal(
-    <div className="fixed inset-0 z-50">
+    <div
+      className="fixed inset-0 z-50"
+      style={{
+        opacity: wrapperOpacity,
+        transition: isClosing ? `opacity 360ms ${easing}` : undefined,
+      }}
+    >
       {/* Backdrop */}
       <div
         className={cn(
           "absolute inset-0 bg-rustic-red/70 backdrop-blur-md",
           "transition-opacity duration-[440ms]",
-          phase === "start" || isClosing ? "opacity-0" : "opacity-100"
+          phase === "start" ? "opacity-0" : "opacity-100"
         )}
         onClick={handleClose}
       />
 
       {/* Animated card */}
-      <div ref={cardRef} style={getCardStyle()}>
-        <div className="bg-merino-white rounded-2xl overflow-hidden shadow-2xl">
-          {/* Title row with +/× icon */}
+      <div style={getCardStyle()}>
+        <div className="bg-merino-white rounded-xl overflow-hidden shadow-2xl">
+          {/* Title row */}
           <button
             onClick={handleClose}
             aria-label="Sluiten"
-            className="w-full px-7 py-5 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+            className="w-full px-8 pt-6 pb-5 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
           >
             <h3
-              className="font-serif font-bold text-rustic-red uppercase text-lg whitespace-nowrap"
+              className="font-serif font-bold text-rustic-red uppercase text-xl whitespace-nowrap"
               style={{ lineHeight: 1 }}
             >
               {skill.title}
             </h3>
             <Plus
-              size={24}
+              size={26}
               strokeWidth={2.5}
-              className="flex-shrink-0 text-rustic-red self-center"
+              className="flex-shrink-0 text-rustic-red"
               style={{
                 transition: "transform 440ms cubic-bezier(0.4,0,0.2,1)",
-                transform: isOpen && !isClosing ? "rotate(45deg)" : "rotate(0deg)",
+                transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
               }}
             />
           </button>
 
-          {/* Description — slides open/closed with card movement */}
+          {/* Description */}
           <div
             className="grid"
             style={{
-              gridTemplateRows: isOpen && !isClosing ? "1fr" : "0fr",
-              transition: `grid-template-rows ${duration} ${easing}`,
+              gridTemplateRows: isOpen ? "1fr" : "0fr",
+              transition: `grid-template-rows 440ms ${easing}`,
             }}
           >
             <div className="overflow-hidden">
               <p
-                className="px-7 pb-7 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
+                className="px-8 pb-8 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
                 style={{
-                  opacity: isOpen && !isClosing ? 1 : 0,
+                  opacity: isOpen ? 1 : 0,
                   transition: `opacity 300ms ${easing}`,
                   transitionDelay: isOpen ? "80ms" : "0ms",
                 }}
@@ -266,8 +236,8 @@ function SkillTag({
       ref={btnRef}
       onClick={handleClick}
       className={cn(
-        "absolute flex items-center gap-2.5 px-5 py-3 bg-merino-white text-rustic-red font-serif font-bold",
-        "text-lg uppercase rounded-2xl cursor-pointer shadow-md",
+        "absolute flex items-center gap-3 px-6 py-3.5 bg-merino-white text-rustic-red font-serif font-bold",
+        "text-xl uppercase rounded-xl cursor-pointer shadow-md",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
       )}
       style={{
@@ -313,7 +283,7 @@ function MobileSkillItem({
 
   return (
     <div
-      className="w-full bg-merino-white rounded-xl overflow-hidden shadow-sm"
+      className="w-full bg-merino-white rounded-lg overflow-hidden shadow-sm"
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? "translateY(0)" : "translateY(12px)",
@@ -324,11 +294,11 @@ function MobileSkillItem({
       <button
         onClick={onClick}
         className={cn(
-          "w-full px-5 bg-merino-white text-rustic-red font-serif font-bold text-base uppercase",
+          "w-full px-6 bg-merino-white text-rustic-red font-serif font-bold text-lg uppercase",
           "flex items-center justify-between gap-4",
           "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
         )}
-        style={{ paddingTop: "1.1rem", paddingBottom: "1rem" }}
+        style={{ paddingTop: "1.25rem", paddingBottom: "1.15rem" }}
       >
         <span style={{ lineHeight: 1, display: "block" }}>{skill.title}</span>
         <Plus
