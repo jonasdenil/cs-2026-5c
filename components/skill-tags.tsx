@@ -68,20 +68,16 @@ function DesktopModal({
   origin: OriginRect
   onClose: () => void
 }) {
-  // Three animation phases: "start" → "moving" → "expanded"
-  type Phase = "start" | "moving" | "expanded"
+  // Two phases: "start" (at tag) → "open" (centred + expanded, simultaneously)
+  type Phase = "start" | "open" | "closing"
   const [phase, setPhase] = useState<Phase>("start")
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Mount → next tick → start → move → expand
     setMounted(true)
-    const t1 = setTimeout(() => setPhase("moving"), 20)
-    const t2 = setTimeout(() => setPhase("expanded"), 450)
-    return () => {
-      clearTimeout(t1)
-      clearTimeout(t2)
-    }
+    // One tick to paint the start position, then immediately transition to open
+    const t1 = setTimeout(() => setPhase("open"), 20)
+    return () => clearTimeout(t1)
   }, [])
 
   useEffect(() => {
@@ -92,59 +88,58 @@ function DesktopModal({
   }, [])
 
   const handleClose = useCallback(() => {
-    setPhase("moving")
-    setTimeout(() => {
-      setPhase("start")
-      setTimeout(onClose, 350)
-    }, 50)
+    setPhase("closing")
+    setTimeout(onClose, 400)
   }, [onClose])
 
-  // The card starts at the tag's bounding rect, centred to viewport during "moving/expanded"
   const vw = typeof window !== "undefined" ? window.innerWidth : 1200
   const vh = typeof window !== "undefined" ? window.innerHeight : 800
+  const expandedW = Math.min(480, vw - 48)
 
-  // Card dimensions (approximate collapsed pill size vs expanded)
-  const cardW = phase === "expanded" ? Math.min(480, vw - 48) : origin.width
-  const cardH = phase === "expanded" ? "auto" : origin.height
+  const getCardStyle = (): React.CSSProperties => {
+    const easing = "cubic-bezier(0.4, 0, 0.2, 1)"
+    const duration = "420ms"
 
-  const getStyle = (): React.CSSProperties => {
     if (phase === "start") {
       return {
         position: "fixed",
-        top: origin.top,
-        left: origin.left,
+        top: origin.top + origin.height / 2,
+        left: origin.left + origin.width / 2,
         width: origin.width,
-        transform: `rotate(${skill.rotation}deg)`,
+        transform: `translate(-50%, -50%) rotate(${skill.rotation}deg)`,
         transition: "none",
         zIndex: 60,
       }
     }
-    if (phase === "moving") {
+
+    if (phase === "closing") {
       return {
         position: "fixed",
-        top: vh / 2,
-        left: vw / 2,
+        top: origin.top + origin.height / 2,
+        left: origin.left + origin.width / 2,
         width: origin.width,
-        transform: `translate(-50%, -50%) rotate(0deg)`,
-        transition:
-          "top 380ms cubic-bezier(0.4, 0, 0.2, 1), left 380ms cubic-bezier(0.4, 0, 0.2, 1), transform 380ms cubic-bezier(0.4, 0, 0.2, 1)",
+        transform: `translate(-50%, -50%) rotate(${skill.rotation}deg)`,
+        transition: `top ${duration} ${easing}, left ${duration} ${easing}, width ${duration} ${easing}, transform ${duration} ${easing}`,
         zIndex: 60,
       }
     }
-    // expanded
+
+    // "open" — move to centre and expand width simultaneously
     return {
       position: "fixed",
       top: vh / 2,
       left: vw / 2,
-      width: Math.min(480, vw - 48),
+      width: expandedW,
       transform: `translate(-50%, -50%) rotate(0deg)`,
-      transition:
-        "width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+      transition: `top ${duration} ${easing}, left ${duration} ${easing}, width ${duration} ${easing}, transform ${duration} ${easing}`,
       zIndex: 60,
     }
   }
 
   if (!mounted) return null
+
+  const isOpen = phase === "open"
+  const isClosing = phase === "closing"
 
   return createPortal(
     <div className="fixed inset-0 z-50">
@@ -152,42 +147,39 @@ function DesktopModal({
       <div
         className={cn(
           "absolute inset-0 bg-rustic-red/70 backdrop-blur-md",
-          "transition-opacity duration-300",
-          phase === "start" ? "opacity-0" : "opacity-100"
+          "transition-opacity duration-400",
+          phase === "start" || isClosing ? "opacity-0" : "opacity-100"
         )}
         onClick={handleClose}
       />
 
       {/* Animated card */}
-      <div style={getStyle()}>
-        <div
-          className={cn(
-            "bg-merino-white rounded-xl overflow-hidden",
-            "shadow-2xl"
-          )}
-        >
-          {/* Title row — always visible */}
+      <div style={getCardStyle()}>
+        <div className="bg-merino-white rounded-xl overflow-hidden shadow-2xl">
+          {/* Title — size stays constant */}
           <div className="px-6 py-4">
-            <h3 className="font-serif font-bold text-rustic-red uppercase text-xl md:text-2xl leading-tight">
+            <h3 className="font-serif font-bold text-rustic-red uppercase text-base leading-tight whitespace-nowrap">
               {skill.title}
             </h3>
           </div>
 
-          {/* Description — only in expanded phase */}
+          {/* Description — slides open simultaneously with movement */}
           <div
-            className={cn(
-              "overflow-hidden transition-all duration-300",
-              phase === "expanded" ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-            )}
+            className="overflow-hidden"
+            style={{
+              maxHeight: isOpen && !isClosing ? "260px" : "0px",
+              opacity: isOpen && !isClosing ? 1 : 0,
+              transition: "max-height 420ms cubic-bezier(0.4,0,0.2,1), opacity 300ms ease-out",
+            }}
           >
-            <p className="px-6 pb-6 font-sans text-rustic-red/80 text-sm md:text-base leading-relaxed">
+            <p className="px-6 pb-6 pt-0 font-sans text-rustic-red/80 text-sm md:text-base leading-relaxed">
               {skill.description}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Close button — appears after expansion */}
+      {/* Close button */}
       <button
         onClick={handleClose}
         aria-label="Sluiten"
@@ -198,14 +190,13 @@ function DesktopModal({
           "transition-all duration-300 ease-out",
           "hover:bg-merino-white hover:text-rustic-red",
           "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red",
-          phase === "expanded"
+          isOpen && !isClosing
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-4 pointer-events-none"
         )}
         style={{
-          // Position it below the centred card — approximate card height
           top: "calc(50% + 160px)",
-          transitionDelay: phase === "expanded" ? "100ms" : "0ms",
+          transitionDelay: isOpen ? "200ms" : "0ms",
         }}
       >
         <X size={22} strokeWidth={2} />
@@ -251,9 +242,7 @@ function SkillTag({
       onClick={handleClick}
       className={cn(
         "absolute px-4 py-2 bg-merino-white text-rustic-red font-serif font-bold",
-        "text-sm md:text-base uppercase rounded-xl cursor-pointer",
-        "shadow-md hover:shadow-xl",
-        "transition-all duration-200 hover:scale-105",
+        "text-base uppercase rounded-xl cursor-pointer shadow-md",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
       )}
       style={{
@@ -262,7 +251,13 @@ function SkillTag({
         rotate: `${skill.rotation}deg`,
         opacity: isVisible ? 1 : 0,
         translate: isVisible ? "0 0" : "0 16px",
-        transition: `opacity 500ms ease-out, translate 500ms ease-out`,
+        transition: `opacity 500ms ease-out, translate 500ms ease-out, transform 350ms cubic-bezier(0.4,0,0.2,1)`,
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.03)"
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"
       }}
     >
       {skill.title}
