@@ -57,7 +57,7 @@ export function BottomNav() {
             <a
               href={item.href}
               onClick={() => setOpen(false)}
-              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus:ring-2 focus:ring-ruby-red"
+              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus:ring-2 focus:ring-ruby-red"
             >
               {item.label}
             </a>
@@ -83,7 +83,7 @@ export function BottomNav() {
             <li key={item.label}>
               <a
                 href={item.href}
-                className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 ease-out hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-merino-white"
+                className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 ease-out hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-merino-white"
               >
                 {item.label}
               </a>
@@ -96,7 +96,7 @@ export function BottomNav() {
           onClick={() => setOpen((prev) => !prev)}
           aria-expanded={open}
           aria-label={open ? "Sluiten" : "Menu"}
-          className="md:hidden flex items-center gap-2 px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-medium uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+          className="md:hidden flex items-center gap-2 px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
         >
           {/* Label — crossfades between Menu and Sluiten */}
           <span className="relative inline-grid">

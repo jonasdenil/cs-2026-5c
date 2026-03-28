@@ -154,7 +154,7 @@ function DesktopModal({
           <button
             onClick={handleClose}
             aria-label="Sluiten"
-            className="w-full px-8 pt-6 pb-5 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+            className="w-full px-8 pt-8 pb-5 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
           >
             <h3
               className="font-serif font-bold text-rustic-red uppercase text-xl whitespace-nowrap"
@@ -414,7 +414,7 @@ function MobileButton({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       className={cn(
         "absolute bottom-5 left-1/2 -translate-x-1/2 md:hidden",
-        "inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-medium uppercase rounded-full px-3.5 py-1.5",
+        "inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full px-3.5 py-1.5 whitespace-nowrap",
         "transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
       )}

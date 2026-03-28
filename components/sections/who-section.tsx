@@ -104,7 +104,7 @@ export function WhoSection() {
               {/* CTA button */}
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-medium uppercase rounded-full px-3.5 py-1.5 transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+                className="inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full px-3.5 py-1.5 transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
               >
                 Hit My Pager
                 <ArrowRight size={16} strokeWidth={2} />
