@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, type RefObject } from "react"
 import { createPortal } from "react-dom"
 import { X, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 interface Skill {
   id: string
@@ -154,11 +155,11 @@ function DesktopModal({
           <button
             onClick={handleClose}
             aria-label="Sluiten"
-            className="w-full px-8 pt-8 pb-5 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+            className="w-full px-6 pt-3.5 pb-3.5 flex items-center justify-between gap-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
           >
             <h3
               className="font-serif font-bold text-rustic-red uppercase text-xl whitespace-nowrap"
-              style={{ lineHeight: 1 }}
+              style={{ lineHeight: 1, paddingTop: "6px" }}
             >
               {skill.title}
             </h3>
@@ -183,7 +184,7 @@ function DesktopModal({
           >
             <div className="overflow-hidden">
               <p
-                className="px-8 pb-8 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
+                className="px-6 pb-3.5 pt-0 font-sans text-rustic-red/80 text-base leading-relaxed"
                 style={{
                   opacity: isOpen ? 1 : 0,
                   transition: `opacity 300ms ${easing}`,
@@ -207,18 +208,21 @@ function SkillTag({
   skill,
   onOpen,
   index,
+  sectionVisible,
 }: {
   skill: Skill
   onOpen: (rect: OriginRect) => void
   index: number
+  sectionVisible: boolean
 }) {
   const [isVisible, setIsVisible] = useState(false)
   const btnRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    const t = setTimeout(() => setIsVisible(true), 120 + index * 110)
+    if (!sectionVisible) return
+    const t = setTimeout(() => setIsVisible(true), 120 + index * 130)
     return () => clearTimeout(t)
-  }, [index])
+  }, [sectionVisible, index])
 
   const handleClick = () => {
     if (!btnRef.current) return
@@ -255,7 +259,7 @@ function SkillTag({
         (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"
       }}
     >
-      <span style={{ lineHeight: 1, display: "block" }}>{skill.title}</span>
+      <span style={{ lineHeight: 1, display: "block", paddingTop: "6px" }}>{skill.title}</span>
       <Plus size={18} strokeWidth={2.5} className="flex-shrink-0 self-center" />
     </button>
   )
@@ -432,6 +436,12 @@ export function SkillTags() {
   const [origin, setOrigin] = useState<OriginRect | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
 
+  const { ref: sectionRef, isVisible: sectionVisible } = useScrollReveal({
+    threshold: 0.15,
+    rootMargin: "0px 0px -5% 0px",
+    once: true,
+  })
+
   const handleTagOpen = useCallback((skill: Skill, rect: OriginRect) => {
     setOrigin(rect)
     setSelectedSkill(skill)
@@ -440,12 +450,13 @@ export function SkillTags() {
   return (
     <>
       {/* Desktop tags — positioned on the image */}
-      <div className="hidden md:block absolute inset-0">
+      <div ref={sectionRef as RefObject<HTMLDivElement>} className="hidden md:block absolute inset-0">
         {skills.map((skill, index) => (
           <SkillTag
             key={skill.id}
             skill={skill}
             index={index}
+            sectionVisible={sectionVisible}
             onOpen={(rect) => handleTagOpen(skill, rect)}
           />
         ))}

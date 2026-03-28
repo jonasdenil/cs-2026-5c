@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useAnimation } from "@/components/animation/animation-context"
 
 const navItems = [
@@ -13,6 +13,15 @@ const navItems = [
 export function BottomNav() {
   const [open, setOpen] = useState(false)
   const { isStepActive, isStepComplete, completeStep } = useAnimation()
+
+  const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    setOpen(false)
+    const target = document.querySelector(href)
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }, [])
   const [hasAnimated, setHasAnimated] = useState(false)
   
   const isActive = isStepActive("main-nav")
@@ -56,8 +65,8 @@ export function BottomNav() {
           >
             <a
               href={item.href}
-              onClick={() => setOpen(false)}
-              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus:ring-2 focus:ring-ruby-red"
+              onClick={(e) => handleNavClick(e, item.href)}
+              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none"
             >
               {item.label}
             </a>
@@ -66,8 +75,13 @@ export function BottomNav() {
       </ul>
 
       <div className="flex items-center gap-3 bg-merino-white rounded-full px-4 py-3 shadow-lg whitespace-nowrap">
-        {/* SC Logo */}
-        <div className="flex-shrink-0">
+        {/* SC Logo — links to hero */}
+        <a
+          href="#hero"
+          onClick={(e) => handleNavClick(e, "#hero")}
+          className="flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red rounded-sm"
+          aria-label="Terug naar het begin"
+        >
           <Image
             src="/images/sc-logo.svg"
             alt="SC Logo"
@@ -75,7 +89,7 @@ export function BottomNav() {
             height={40}
             className="h-9 w-auto"
           />
-        </div>
+        </a>
 
         {/* Desktop nav items */}
         <ul className="hidden md:flex items-center gap-2">
@@ -83,7 +97,8 @@ export function BottomNav() {
             <li key={item.label}>
               <a
                 href={item.href}
-                className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 ease-out hover:bg-ruby-red focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-merino-white"
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="block px-3.5 py-1.5 bg-rustic-red text-merino-white font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 ease-out hover:bg-ruby-red focus:outline-none"
               >
                 {item.label}
               </a>

@@ -43,7 +43,7 @@ export function WhoSection() {
   const { ref: ctaRef, isVisible: ctaVisible } = useScrollReveal({ threshold: 0.15, rootMargin: "0px 0px -10% 0px" })
 
   return (
-    <section id="who" className="w-full">
+    <section id="who" className="w-full pt-24">
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 flex flex-col gap-16 md:gap-24">
 
         {/* Wide photo with skill tags */}
