@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { SkillTags } from "@/components/skill-tags"
 
 // Shared reveal style — use on any element that should fade-in from bottom
 export function revealStyle(isVisible: boolean, delay = 0): React.CSSProperties {
@@ -45,10 +46,10 @@ export function WhoSection() {
     <section id="who" className="w-full">
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 flex flex-col gap-16 md:gap-24">
 
-        {/* Wide photo */}
+        {/* Wide photo with skill tags */}
         <div
           ref={photoRef as React.RefObject<HTMLDivElement>}
-          className="w-full overflow-hidden"
+          className="w-full overflow-hidden relative"
           style={{ borderRadius: "12px", ...revealStyle(photoVisible) }}
         >
           <Image
@@ -58,6 +59,8 @@ export function WhoSection() {
             height={1440}
             className="w-full h-auto object-cover"
           />
+          {/* Interactive skill tags overlay */}
+          <SkillTags />
         </div>
 
         {/* 50/50 title + text */}
