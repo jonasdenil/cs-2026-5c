@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { SkillTags } from "@/components/skill-tags"
 
 // Shared reveal style — use on any element that should fade-in from bottom
 export function revealStyle(isVisible: boolean, delay = 0): React.CSSProperties {
@@ -45,10 +46,10 @@ export function WhoSection() {
     <section id="who" className="w-full">
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 flex flex-col gap-16 md:gap-24">
 
-        {/* Wide photo */}
+        {/* Wide photo with skill tags */}
         <div
           ref={photoRef as React.RefObject<HTMLDivElement>}
-          className="w-full overflow-hidden"
+          className="w-full overflow-hidden relative"
           style={{ borderRadius: "12px", ...revealStyle(photoVisible) }}
         >
           <Image
@@ -58,6 +59,8 @@ export function WhoSection() {
             height={1440}
             className="w-full h-auto object-cover"
           />
+          {/* Interactive skill tags overlay */}
+          <SkillTags />
         </div>
 
         {/* 50/50 title + text */}
@@ -69,10 +72,10 @@ export function WhoSection() {
             style={revealStyle(titleVisible)}
           >
             <h2
-              className="font-serif text-merino-white uppercase leading-none"
-              style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700 }}
+              className="font-serif text-merino-white uppercase leading-none text-[clamp(1.75rem,5vw,3.5rem)]"
+              style={{ fontWeight: 700 }}
             >
-              Mijn creatieve stack
+              Mijn<br />creatieve<br />stack
             </h2>
           </div>
 
@@ -101,7 +104,7 @@ export function WhoSection() {
               {/* CTA button */}
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-medium uppercase rounded-full px-3.5 py-1.5 transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+                className="inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full px-3.5 py-1.5 transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
               >
                 Hit My Pager
                 <ArrowRight size={16} strokeWidth={2} />
