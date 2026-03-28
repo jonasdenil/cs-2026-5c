@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, type RefObject } from "react"
 import { createPortal } from "react-dom"
 import { X, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 
 interface Skill {
   id: string
@@ -207,18 +208,21 @@ function SkillTag({
   skill,
   onOpen,
   index,
+  sectionVisible,
 }: {
   skill: Skill
   onOpen: (rect: OriginRect) => void
   index: number
+  sectionVisible: boolean
 }) {
   const [isVisible, setIsVisible] = useState(false)
   const btnRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    const t = setTimeout(() => setIsVisible(true), 120 + index * 110)
+    if (!sectionVisible) return
+    const t = setTimeout(() => setIsVisible(true), 120 + index * 130)
     return () => clearTimeout(t)
-  }, [index])
+  }, [sectionVisible, index])
 
   const handleClick = () => {
     if (!btnRef.current) return
@@ -432,6 +436,12 @@ export function SkillTags() {
   const [origin, setOrigin] = useState<OriginRect | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
 
+  const { ref: sectionRef, isVisible: sectionVisible } = useScrollReveal({
+    threshold: 0.15,
+    rootMargin: "0px 0px -5% 0px",
+    once: true,
+  })
+
   const handleTagOpen = useCallback((skill: Skill, rect: OriginRect) => {
     setOrigin(rect)
     setSelectedSkill(skill)
@@ -440,12 +450,13 @@ export function SkillTags() {
   return (
     <>
       {/* Desktop tags — positioned on the image */}
-      <div className="hidden md:block absolute inset-0">
+      <div ref={sectionRef as RefObject<HTMLDivElement>} className="hidden md:block absolute inset-0">
         {skills.map((skill, index) => (
           <SkillTag
             key={skill.id}
             skill={skill}
             index={index}
+            sectionVisible={sectionVisible}
             onOpen={(rect) => handleTagOpen(skill, rect)}
           />
         ))}
