@@ -1,5 +1,6 @@
 import { TopBar } from "@/components/sections/top-bar"
 import { HeroVisual } from "@/components/sections/hero-visual"
+import { WhoSection } from "@/components/sections/who-section"
 import { BottomNav } from "@/components/sections/bottom-nav"
 import { PageWrapper } from "@/components/page-wrapper"
 
@@ -18,10 +19,11 @@ export default function Home() {
 
         </div>
 
+        {/* Who Section */}
+        <WhoSection />
+
         {/* Sticky bottom navigation */}
         <BottomNav />
-
-        {/* Additional sections will be added below */}
       </main>
     </PageWrapper>
   )
