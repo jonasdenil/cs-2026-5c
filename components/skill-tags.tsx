@@ -339,7 +339,11 @@ function MobileSkillItem({
 
 function MobileModal({ onClose }: { onClose: () => void }) {
   const [isVisible, setIsVisible] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
   const [openSkill, setOpenSkill] = useState<string | null>(null)
+
+  // Total stagger duration: last item delay (60 + skills.length * 90) + animation duration (500ms)
+  const staggerTotal = 60 + skills.length * 90 + 500
 
   useEffect(() => {
     const t = setTimeout(() => setIsVisible(true), 20)
@@ -351,21 +355,31 @@ function MobileModal({ onClose }: { onClose: () => void }) {
   }, [])
 
   const handleClose = () => {
+    // First fade out all items, then fade out backdrop
     setIsVisible(false)
-    setTimeout(onClose, 300)
+    setIsClosing(true)
+    setTimeout(onClose, staggerTotal)
   }
+
+  // Backdrop fades in immediately on open, but on close waits for stagger to finish
+  const backdropStyle: React.CSSProperties = isClosing
+    ? {
+        opacity: 0,
+        transition: `opacity 400ms cubic-bezier(0.4,0,0.2,1) ${staggerTotal - 400}ms`,
+      }
+    : {
+        opacity: isVisible ? 1 : 0,
+        transition: "opacity 300ms cubic-bezier(0.4,0,0.2,1)",
+      }
 
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6"
     >
-      {/* Backdrop — opacity and blur animate together */}
+      {/* Backdrop — fades in immediately, fades out after stagger completes */}
       <div
         className="absolute inset-0 bg-rustic-red/70 backdrop-blur-md"
-        style={{
-          opacity: isVisible ? 1 : 0,
-          transition: "opacity 300ms cubic-bezier(0.4,0,0.2,1)",
-        }}
+        style={backdropStyle}
         onClick={handleClose}
       />
 
