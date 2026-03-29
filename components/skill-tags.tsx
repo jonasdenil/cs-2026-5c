@@ -388,23 +388,30 @@ function MobileModal({ onClose }: { onClose: () => void }) {
           />
         ))}
 
-        {/* Close button — same gap as between skill tags */}
-        <button
-          onClick={handleClose}
-          aria-label="Sluiten"
-          className={cn(
-            "w-full flex items-center justify-center gap-2 px-6 py-4 rounded-lg",
-            "bg-merino-white text-rustic-red font-sans font-semibold uppercase text-base",
-            "transition-all duration-500 ease-out",
-            "hover:bg-merino-white/90",
-            "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red",
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          )}
-          style={{ transitionDelay: `${skills.length * 80 + 120}ms` }}
+        {/* Close button — styled like "Creatieve stack" trigger, staggered last */}
+        <div
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? "translateY(0)" : "translateY(12px)",
+            transition: `opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1)`,
+            transitionDelay: `${skills.length * 90 + 60}ms`,
+            display: "flex",
+            justifyContent: "center",
+          }}
         >
-          Sluiten
-          <X size={18} strokeWidth={2} />
-        </button>
+          <button
+            onClick={handleClose}
+            aria-label="Sluiten"
+            className={cn(
+              "inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full px-3.5 py-1.5 whitespace-nowrap",
+              "transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+            )}
+          >
+            Sluiten
+            <X size={16} strokeWidth={2} />
+          </button>
+        </div>
       </div>
     </div>,
     document.body
