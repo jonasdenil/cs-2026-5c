@@ -19,7 +19,26 @@ export function BottomNav() {
     setOpen(false)
     const target = document.querySelector(href)
     if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" })
+      const targetPosition = target.getBoundingClientRect().top + window.scrollY
+      const startPosition = window.scrollY
+      const distance = targetPosition - startPosition
+      const duration = 800 // ms
+      let startTime: number | null = null
+
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
+
+      const scroll = (currentTime: number) => {
+        if (startTime === null) startTime = currentTime
+        const elapsed = currentTime - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        const ease = easeOutCubic(progress)
+        window.scrollTo(0, startPosition + distance * ease)
+        if (progress < 1) {
+          requestAnimationFrame(scroll)
+        }
+      }
+
+      requestAnimationFrame(scroll)
     }
   }, [])
   const [hasAnimated, setHasAnimated] = useState(false)
