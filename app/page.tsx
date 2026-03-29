@@ -2,6 +2,7 @@ import { TopBar } from "@/components/sections/top-bar"
 import { HeroVisual } from "@/components/sections/hero-visual"
 import { WhoSection } from "@/components/sections/who-section"
 import { CasesSection } from "@/components/sections/cases-section"
+import { Footer } from "@/components/sections/footer"
 import { BottomNav } from "@/components/sections/bottom-nav"
 import { PageWrapper } from "@/components/page-wrapper"
 
@@ -25,6 +26,9 @@ export default function Home() {
 
         {/* Cases Section */}
         <CasesSection />
+
+        {/* Footer */}
+        <Footer />
 
         {/* Sticky bottom navigation */}
         <BottomNav />
