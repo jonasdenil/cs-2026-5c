@@ -97,10 +97,13 @@ function ContactForm() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Form heading — matches top-bar style */}
-      <p className="font-sans text-merino-white text-xs sm:text-sm uppercase tracking-widest font-medium">
-        Of stuur een bericht
-      </p>
+      {/* Form heading — Bolota, as per design spec */}
+      <h3
+        className="font-serif text-merino-white text-center"
+        style={{ fontSize: "38px", fontWeight: 240, lineHeight: "normal" }}
+      >
+        Or hit my pager
+      </h3>
 
       {status === "success" ? (
         <p className="font-sans text-merino-white/70 text-xs uppercase tracking-widest">
@@ -200,35 +203,37 @@ export function Footer() {
       </div>
 
       {/* ── Camera + Contact form block ── */}
-      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 relative">
-        <div className="relative flex flex-col md:flex-row items-start gap-0 md:gap-12 lg:gap-20">
+      {/*
+        50/50 grid: left col = camera, right col = form.
+        Camera overlaps the contact-info block above via negative top margin.
+        The right column aligns with the second half of the max-w-screen-xl container.
+      */}
+      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 items-start">
 
-          {/* Camera — -99° rotation, overlaps last line of text above */}
-          <div className="relative w-full md:w-auto flex justify-center md:justify-start -mt-16 md:-mt-32 mb-12 md:mb-0 z-10">
-            <div
-              className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[380px]"
-              style={{ transform: "rotate(-99deg)" }}
-            >
+          {/* Left col — camera, overlapping up */}
+          <div className="flex justify-center md:justify-start -mt-20 md:-mt-40 z-10">
+            <div style={{ transform: "rotate(81deg)" }}>
               <Image
                 src="/images/camera.png"
                 alt="Sony DSC-W130 camera"
-                width={380}
-                height={506}
-                className="w-full h-auto drop-shadow-2xl"
+                width={570}
+                height={760}
+                className="w-[360px] md:w-[480px] lg:w-[570px] h-auto drop-shadow-2xl"
                 priority
               />
             </div>
           </div>
 
-          {/* Contact form — narrow on the right */}
-          <div className="w-full md:w-80 lg:w-96 self-start pt-0 md:pt-24">
+          {/* Right col — form, starts at second column */}
+          <div className="pt-12 md:pt-28 pb-8">
             <ContactForm />
           </div>
         </div>
       </div>
 
       {/* ── Bottom bar — mirrors top-bar exactly ── */}
-      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 py-6 pb-32">
+      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 pt-20 md:pt-32 py-6 pb-32">
         <div className="relative flex items-center justify-between">
           {/* Left */}
           <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
