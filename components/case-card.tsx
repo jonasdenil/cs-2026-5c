@@ -38,21 +38,21 @@ export function CaseCard({
             alt=""
             width={14}
             height={14}
-            className="w-5 h-5"
+            className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
           />
           <Image
             src="/images/bolletje.svg"
             alt=""
             width={14}
             height={14}
-            className="w-5 h-5"
+            className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
           />
           <Image
             src="/images/bolletje.svg"
             alt=""
             width={14}
             height={14}
-            className="w-5 h-5"
+            className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
           />
         </div>
 
@@ -62,7 +62,7 @@ export function CaseCard({
           style={{
             color: "#333",
             fontFamily: '"Lucida Grande", sans-serif',
-            fontSize: "clamp(10px, 1.8vw, 14px)",
+            fontSize: "clamp(11px, 2vw, 14px)",
             fontWeight: 500,
           }}
         >
