@@ -90,22 +90,40 @@ function ContactForm() {
     setErrorMsg("")
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ naam, email, boodschap }),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setErrorMsg(data.error || "Er liep iets mis.")
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY
+      if (!accessKey) {
+        setErrorMsg("Web3Forms key is not configured.")
         setStatus("error")
         return
       }
+
+      const formData = new FormData()
+      formData.append("access_key", accessKey)
+      formData.append("name", naam)
+      formData.append("email", email)
+      formData.append("message", boodschap)
+      formData.append("to_email", "hallo@charlotteschaerlaecken.be")
+      formData.append("subject", `New message from ${naam}`)
+
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (!data.success) {
+        setErrorMsg(data.message || "Er liep iets mis.")
+        setStatus("error")
+        return
+      }
+
       setStatus("success")
       setNaam("")
       setEmail("")
       setBoodschap("")
-    } catch {
+      setTimeout(() => setStatus("idle"), 3000)
+    } catch (err) {
       setErrorMsg("Er liep iets mis. Probeer het opnieuw.")
       setStatus("error")
     }
