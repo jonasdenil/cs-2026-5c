@@ -225,7 +225,7 @@ export function Footer() {
   const contactVisibility = [vis0, vis1, vis2]
 
   return (
-    <footer className="bg-rustic-red w-full">
+    <footer id="contact" className="bg-rustic-red w-full">
 
       {/* ── Contact info block ── */}
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 pt-20 md:pt-28">
