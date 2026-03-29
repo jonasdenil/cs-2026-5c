@@ -176,7 +176,7 @@ export function Footer() {
           <a
             href="tel:+32476353677"
             className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(2.2rem, 7vw, 7rem)", lineHeight: 1.05 }}
+            style={{ fontSize: "clamp(1.2rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
           >
             +32 476 35 36 77
           </a>
@@ -192,7 +192,7 @@ export function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.6rem, 5vw, 5rem)", lineHeight: 1.05 }}
+            style={{ fontSize: "clamp(1.2rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
           >
             @c.schaerlaecken
           </a>
@@ -225,7 +225,7 @@ export function Footer() {
       </div>
 
       {/* ── Bottom bar — mirrors top-bar exactly ── */}
-      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 py-6">
+      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 py-6 pb-32">
         <div className="relative flex items-center justify-between">
           {/* Left */}
           <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
