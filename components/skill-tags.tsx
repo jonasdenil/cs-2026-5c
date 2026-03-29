@@ -357,15 +357,15 @@ function MobileModal({ onClose }: { onClose: () => void }) {
 
   return createPortal(
     <div
-      className={cn(
-        "fixed inset-0 z-50 flex flex-col items-center justify-center p-6",
-        "transition-opacity duration-300",
-        isVisible ? "opacity-100" : "opacity-0"
-      )}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6"
     >
-      {/* Backdrop */}
+      {/* Backdrop — opacity and blur animate together */}
       <div
         className="absolute inset-0 bg-rustic-red/70 backdrop-blur-md"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transition: "opacity 300ms cubic-bezier(0.4,0,0.2,1)",
+        }}
         onClick={handleClose}
       />
 
