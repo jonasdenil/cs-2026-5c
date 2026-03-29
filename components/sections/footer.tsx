@@ -234,7 +234,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-12 md:gap-20 lg:gap-28">
 
           {/* Left col — camera, overlapping up — positioned lower so only top-right corner overlaps bottom 50% of @c.schaerlaecken */}
-          <div className="flex justify-center md:justify-start mt-32 md:mt-24 z-10">
+          <div className="flex justify-center md:justify-start mt-[113px] md:mt-[81px] z-10">
             <div style={{ transform: "rotate(81deg)" }}>
               <Image
                 src="/images/camera.png"
