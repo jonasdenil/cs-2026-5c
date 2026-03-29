@@ -200,25 +200,28 @@ export function Footer() {
       </div>
 
       {/* ── Camera + Contact form block ── */}
-      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16">
-        <div className="flex flex-col md:flex-row items-start gap-10 md:gap-16 -mt-4 md:-mt-10">
+      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 relative">
+        <div className="relative flex flex-col md:flex-row items-start gap-0 md:gap-12 lg:gap-20">
 
           {/* Camera — -99° rotation, overlaps last line of text above */}
-          <div
-            className="relative flex-shrink-0 w-[220px] md:w-[300px] lg:w-[380px] self-start"
-            style={{ transform: "rotate(-99deg)" }}
-          >
-            <Image
-              src="/images/camera.png"
-              alt="Sony DSC-W130 camera"
-              width={380}
-              height={506}
-              className="w-full h-auto drop-shadow-2xl"
-            />
+          <div className="relative w-full md:w-auto flex justify-center md:justify-start -mt-16 md:-mt-32 mb-12 md:mb-0 z-10">
+            <div
+              className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[380px]"
+              style={{ transform: "rotate(-99deg)" }}
+            >
+              <Image
+                src="/images/camera.png"
+                alt="Sony DSC-W130 camera"
+                width={380}
+                height={506}
+                className="w-full h-auto drop-shadow-2xl"
+                priority
+              />
+            </div>
           </div>
 
-          {/* Contact form */}
-          <div className="flex-1 self-center pt-10 md:pt-20 pb-16 md:pb-24">
+          {/* Contact form — narrow on the right */}
+          <div className="w-full md:w-80 lg:w-96 self-start pt-0 md:pt-24">
             <ContactForm />
           </div>
         </div>
