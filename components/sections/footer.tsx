@@ -13,15 +13,18 @@ function FloatingField({
   value,
   onChange,
   required,
+  rows,
 }: {
   label: string
   type?: string
   value: string
   onChange: (v: string) => void
   required?: boolean
+  rows?: number
 }) {
   const [focused, setFocused] = useState(false)
   const lifted = focused || value.length > 0
+  const isTextarea = type === "textarea"
 
   return (
     <div className="relative w-full">
@@ -38,19 +41,35 @@ function FloatingField({
         {label}
       </label>
 
-      <input
-        type={type}
-        value={value}
-        required={required}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        onChange={(e) => onChange(e.target.value)}
-        className={cn(
-          "w-full bg-transparent border-b pb-2 pt-5 font-sans text-sm font-medium uppercase tracking-wider text-merino-white",
-          "focus:outline-none transition-colors duration-200",
-          focused ? "border-merino-white" : "border-merino-white/30"
-        )}
-      />
+      {isTextarea ? (
+        <textarea
+          value={value}
+          required={required}
+          rows={rows || 4}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          onChange={(e) => onChange(e.target.value)}
+          className={cn(
+            "w-full bg-transparent border-b pb-2 pt-5 font-sans text-sm font-medium uppercase tracking-wider text-merino-white resize-none",
+            "focus:outline-none transition-colors duration-200",
+            focused ? "border-merino-white" : "border-merino-white/30"
+          )}
+        />
+      ) : (
+        <input
+          type={type}
+          value={value}
+          required={required}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          onChange={(e) => onChange(e.target.value)}
+          className={cn(
+            "w-full bg-transparent border-b pb-2 pt-5 font-sans text-sm font-medium uppercase tracking-wider text-merino-white",
+            "focus:outline-none transition-colors duration-200",
+            focused ? "border-merino-white" : "border-merino-white/30"
+          )}
+        />
+      )}
     </div>
   )
 }
@@ -128,12 +147,14 @@ function ContactForm() {
             />
           </div>
 
-          {/* Boodschap */}
+          {/* Bericht — textarea now supports multiple lines */}
           <FloatingField
             label="Bericht"
+            type="textarea"
             value={boodschap}
             onChange={setBoodschap}
             required
+            rows={4}
           />
 
           {/* Error */}
@@ -212,8 +233,8 @@ export function Footer() {
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-12 md:gap-20 lg:gap-28">
 
-          {/* Left col — camera, overlapping up */}
-          <div className="flex justify-center md:justify-start -mt-20 md:-mt-40 z-10">
+          {/* Left col — camera, overlapping up — positioned lower so only top-right corner overlaps bottom 50% of @c.schaerlaecken */}
+          <div className="flex justify-center md:justify-start mt-32 md:mt-24 z-10">
             <div style={{ transform: "rotate(81deg)" }}>
               <Image
                 src="/images/camera.png"
