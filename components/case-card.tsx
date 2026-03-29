@@ -32,27 +32,27 @@ export function CaseCard({
         }}
       >
         {/* Three MacOS window buttons */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <Image
             src="/images/bolletje.svg"
             alt=""
             width={14}
             height={14}
-            className="w-3.5 h-3.5"
+            className="w-5 h-5"
           />
           <Image
             src="/images/bolletje.svg"
             alt=""
             width={14}
             height={14}
-            className="w-3.5 h-3.5"
+            className="w-5 h-5"
           />
           <Image
             src="/images/bolletje.svg"
             alt=""
             width={14}
             height={14}
-            className="w-3.5 h-3.5"
+            className="w-5 h-5"
           />
         </div>
 
@@ -62,7 +62,7 @@ export function CaseCard({
           style={{
             color: "#333",
             fontFamily: '"Lucida Grande", sans-serif',
-            fontSize: "clamp(12px, 2.5vw, 19px)",
+            fontSize: "clamp(10px, 1.8vw, 14px)",
             fontWeight: 500,
           }}
         >
@@ -89,7 +89,7 @@ export function CaseCard({
           <h3
             className="font-serif text-merino-white text-center"
             style={{
-              fontSize: "clamp(2.5rem, 8vw, 77px)",
+              fontSize: "clamp(2rem, 6vw, 55px)",
               fontWeight: 240,
               lineHeight: 1,
             }}
