@@ -66,7 +66,7 @@ export function BottomNav() {
             <a
               href={item.href}
               onClick={(e) => handleNavClick(e, item.href)}
-              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none"
+              className="block px-3.5 py-1.5 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full outline outline-1 outline-coral-reef/30 transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none"
             >
               {item.label}
             </a>
@@ -74,7 +74,7 @@ export function BottomNav() {
         ))}
       </ul>
 
-      <div className="flex items-center gap-3 bg-merino-white rounded-full px-4 py-3 shadow-lg whitespace-nowrap">
+      <div className="flex items-center gap-3 bg-merino-white rounded-full px-4 py-3 shadow-lg whitespace-nowrap outline outline-1 outline-coral-reef/30">
         {/* SC Logo — links to hero */}
         <a
           href="#hero"
