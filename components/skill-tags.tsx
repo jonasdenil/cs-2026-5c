@@ -272,27 +272,22 @@ function MobileSkillItem({
   isOpen,
   onClick,
   index,
+  parentVisible,
 }: {
   skill: Skill
   isOpen: boolean
   onClick: () => void
   index: number
+  parentVisible: boolean
 }) {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const t = setTimeout(() => setIsVisible(true), 60 + index * 90)
-    return () => clearTimeout(t)
-  }, [index])
-
   return (
     <div
       className="w-full bg-merino-white rounded-lg overflow-hidden shadow-sm"
       style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translateY(0)" : "translateY(12px)",
+        opacity: parentVisible ? 1 : 0,
+        transform: parentVisible ? "translateY(0)" : "translateY(12px)",
         transition: `opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1)`,
-        transitionDelay: `${index * 90}ms`,
+        transitionDelay: `${60 + index * 90}ms`,
       }}
     >
       <button
@@ -344,7 +339,11 @@ function MobileSkillItem({
 
 function MobileModal({ onClose }: { onClose: () => void }) {
   const [isVisible, setIsVisible] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
   const [openSkill, setOpenSkill] = useState<string | null>(null)
+
+  // Total stagger duration: last item delay (60 + skills.length * 90) + animation duration (500ms)
+  const staggerTotal = 60 + skills.length * 90 + 500
 
   useEffect(() => {
     const t = setTimeout(() => setIsVisible(true), 20)
@@ -356,25 +355,35 @@ function MobileModal({ onClose }: { onClose: () => void }) {
   }, [])
 
   const handleClose = () => {
+    // First fade out all items, then fade out backdrop
     setIsVisible(false)
-    setTimeout(onClose, 300)
+    setIsClosing(true)
+    setTimeout(onClose, staggerTotal)
   }
+
+  // Backdrop fades in immediately on open, but on close waits for stagger to finish
+  const backdropStyle: React.CSSProperties = isClosing
+    ? {
+        opacity: 0,
+        transition: `opacity 400ms cubic-bezier(0.4,0,0.2,1) ${staggerTotal - 400}ms`,
+      }
+    : {
+        opacity: isVisible ? 1 : 0,
+        transition: "opacity 300ms cubic-bezier(0.4,0,0.2,1)",
+      }
 
   return createPortal(
     <div
-      className={cn(
-        "fixed inset-0 z-50 flex flex-col items-center justify-center p-6",
-        "transition-opacity duration-300",
-        isVisible ? "opacity-100" : "opacity-0"
-      )}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6"
     >
-      {/* Backdrop */}
+      {/* Backdrop — fades in immediately, fades out after stagger completes */}
       <div
-        className="absolute inset-0 bg-rustic-red/90 backdrop-blur-md"
+        className="absolute inset-0 bg-rustic-red/70 backdrop-blur-md"
+        style={backdropStyle}
         onClick={handleClose}
       />
 
-      {/* Skills list */}
+      {/* Skills list + close button — same gap throughout */}
       <div className="relative z-10 w-full max-w-sm flex flex-col gap-3">
         {skills.map((skill, index) => (
           <MobileSkillItem
@@ -385,26 +394,35 @@ function MobileModal({ onClose }: { onClose: () => void }) {
               setOpenSkill(openSkill === skill.id ? null : skill.id)
             }
             index={index}
+            parentVisible={isVisible}
           />
         ))}
-      </div>
 
-      {/* Close button */}
-      <button
-        onClick={handleClose}
-        aria-label="Sluiten"
-        className={cn(
-          "relative z-10 mt-8 w-12 h-12 rounded-full border-2 border-merino-white",
-          "flex items-center justify-center text-merino-white",
-          "transition-all duration-500 ease-out",
-          "hover:bg-merino-white hover:text-rustic-red",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-        )}
-        style={{ transitionDelay: `${skills.length * 80 + 120}ms` }}
-      >
-        <X size={22} strokeWidth={2} />
-      </button>
+        {/* Close button — last in stagger: delay after final skill item */}
+        <div
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? "translateY(0)" : "translateY(12px)",
+            transition: `opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1)`,
+            transitionDelay: `${60 + skills.length * 90}ms`,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <button
+            onClick={handleClose}
+            aria-label="Sluiten"
+            className={cn(
+              "inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full px-3.5 py-1.5 whitespace-nowrap",
+              "transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
+            )}
+          >
+            Sluiten
+            <X size={16} strokeWidth={2} />
+          </button>
+        </div>
+      </div>
     </div>,
     document.body
   )
