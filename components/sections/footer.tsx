@@ -2,10 +2,60 @@
 
 import Image from "next/image"
 import { useState } from "react"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-// ─── Contact Form ────────────────────────────────────────────────────────────
+// ─── Floating Label Field ─────────────────────────────────────────────────────
+
+function FloatingField({
+  label,
+  type = "text",
+  value,
+  onChange,
+  required,
+}: {
+  label: string
+  type?: string
+  value: string
+  onChange: (v: string) => void
+  required?: boolean
+}) {
+  const [focused, setFocused] = useState(false)
+  const lifted = focused || value.length > 0
+
+  return (
+    <div className="relative w-full">
+      {/* Floating label */}
+      <label
+        className={cn(
+          "absolute left-0 font-sans uppercase tracking-widest text-merino-white/60 pointer-events-none",
+          "transition-all duration-200 ease-in-out",
+          lifted
+            ? "text-[10px] top-0 text-merino-white/80"
+            : "text-xs top-[18px]"
+        )}
+      >
+        {label}
+      </label>
+
+      <input
+        type={type}
+        value={value}
+        required={required}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        onChange={(e) => onChange(e.target.value)}
+        className={cn(
+          "w-full bg-transparent border-b pb-2 pt-5 font-sans text-sm uppercase tracking-wider text-merino-white",
+          "focus:outline-none transition-colors duration-200",
+          focused ? "border-merino-white" : "border-merino-white/30"
+        )}
+      />
+    </div>
+  )
+}
+
+// ─── Contact Form ─────────────────────────────────────────────────────────────
 
 type FormStatus = "idle" | "loading" | "success" | "error"
 
@@ -45,67 +95,60 @@ function ContactForm() {
     }
   }
 
-  const inputBase =
-    "w-full bg-transparent border-b border-merino-white/40 pb-2 text-merino-white font-sans text-sm uppercase tracking-wider placeholder:text-merino-white/40 focus:outline-none focus:border-merino-white transition-colors duration-200"
-
   return (
-    <div className="flex flex-col gap-6">
-      <h2 className="font-serif text-merino-white text-xl md:text-2xl uppercase font-bold tracking-wide">
+    <div className="flex flex-col gap-8">
+      {/* Form heading — matches top-bar style */}
+      <p className="font-sans text-merino-white text-xs sm:text-sm uppercase tracking-widest font-medium">
         Of stuur een bericht
-      </h2>
+      </p>
 
       {status === "success" ? (
-        <p className="font-sans text-merino-white/80 text-sm uppercase tracking-wider">
+        <p className="font-sans text-merino-white/70 text-xs uppercase tracking-widest">
           Bericht verzonden — ik neem zo snel mogelijk contact op.
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Row: Naam + E-mailadres */}
           <div className="flex flex-col sm:flex-row gap-6">
-            <input
-              type="text"
-              placeholder="Naam"
+            <FloatingField
+              label="Naam"
               value={naam}
-              onChange={(e) => setNaam(e.target.value)}
+              onChange={setNaam}
               required
-              className={cn(inputBase, "flex-1")}
             />
-            <input
+            <FloatingField
+              label="E-mailadres"
               type="email"
-              placeholder="E-mailadres"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={setEmail}
               required
-              className={cn(inputBase, "flex-1")}
             />
           </div>
 
-          {/* Bericht */}
-          <input
-            type="text"
-            placeholder="Bericht"
+          {/* Boodschap */}
+          <FloatingField
+            label="Bericht"
             value={boodschap}
-            onChange={(e) => setBoodschap(e.target.value)}
+            onChange={setBoodschap}
             required
-            className={inputBase}
           />
 
           {/* Error */}
           {status === "error" && (
-            <p className="font-sans text-ruby-red text-xs uppercase tracking-wider -mt-2">
+            <p className="font-sans text-ruby-red text-xs uppercase tracking-widest -mt-2">
               {errorMsg}
             </p>
           )}
 
-          {/* Submit */}
+          {/* Submit — same rounded-full CTA as used elsewhere in the site */}
           <div>
             <button
               type="submit"
               disabled={status === "loading"}
               className={cn(
-                "inline-flex items-center gap-2 border border-merino-white rounded-full px-5 py-2",
-                "font-sans text-merino-white text-sm uppercase tracking-widest font-medium",
-                "transition-all duration-200 hover:bg-merino-white hover:text-rustic-red",
+                "inline-flex items-center gap-2 bg-merino-white text-rustic-red rounded-full px-5 py-2",
+                "font-sans text-xs sm:text-sm uppercase tracking-widest font-medium",
+                "transition-colors duration-200 hover:bg-tea-rose",
                 "disabled:opacity-50 disabled:cursor-not-allowed"
               )}
             >
@@ -119,17 +162,17 @@ function ContactForm() {
   )
 }
 
-// ─── Footer ──────────────────────────────────────────────────────────────────
+// ─── Footer ───────────────────────────────────────────────────────────────────
 
 export function Footer() {
   const year = new Date().getFullYear()
 
   return (
     <footer className="bg-rustic-red w-full">
+
       {/* ── Contact info block ── */}
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 pt-20 md:pt-28">
-        <div className="flex flex-col items-center text-center gap-0 leading-none">
-          {/* Phone */}
+        <div className="flex flex-col items-center text-center leading-none">
           <a
             href="tel:+32476353677"
             className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
@@ -137,23 +180,19 @@ export function Footer() {
           >
             +32 476 35 36 77
           </a>
-
-          {/* Email */}
           <a
             href="mailto:hallo@charlotteschaerlaecken.be"
             className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.4rem, 4.5vw, 4.5rem)", lineHeight: 1.05 }}
+            style={{ fontSize: "clamp(1.2rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
           >
             hallo@charlotteschaerlaecken.be
           </a>
-
-          {/* Instagram */}
           <a
             href="https://www.instagram.com/c.schaerlaecken/"
             target="_blank"
             rel="noopener noreferrer"
             className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.8rem, 5.5vw, 5.5rem)", lineHeight: 1.05 }}
+            style={{ fontSize: "clamp(1.6rem, 5vw, 5rem)", lineHeight: 1.05 }}
           >
             @c.schaerlaecken
           </a>
@@ -162,55 +201,55 @@ export function Footer() {
 
       {/* ── Camera + Contact form block ── */}
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16">
-        {/* Negative margin-top pulls the camera up to overlap the last text line */}
-        <div className="flex flex-col md:flex-row items-start gap-10 md:gap-16 -mt-6 md:-mt-12">
+        <div className="flex flex-col md:flex-row items-start gap-10 md:gap-16 -mt-4 md:-mt-10">
 
-          {/* Camera — rotated, overlapping */}
+          {/* Camera — -99° rotation, overlaps last line of text above */}
           <div
-            className="relative flex-shrink-0 w-[260px] md:w-[340px] lg:w-[420px] self-start"
-            style={{ transform: "rotate(-9deg)" }}
+            className="relative flex-shrink-0 w-[220px] md:w-[300px] lg:w-[380px] self-start"
+            style={{ transform: "rotate(-99deg)" }}
           >
             <Image
               src="/images/camera.png"
               alt="Sony DSC-W130 camera"
-              width={420}
-              height={560}
+              width={380}
+              height={506}
               className="w-full h-auto drop-shadow-2xl"
             />
           </div>
 
-          {/* Contact form — vertically centered next to camera */}
-          <div className="flex-1 self-center pt-16 md:pt-24 pb-16 md:pb-24">
+          {/* Contact form */}
+          <div className="flex-1 self-center pt-10 md:pt-20 pb-16 md:pb-24">
             <ContactForm />
           </div>
         </div>
       </div>
 
-      {/* ── Bottom bar — mirrors top-bar ── */}
-      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 py-6 border-t border-merino-white/10">
+      {/* ── Bottom bar — mirrors top-bar exactly ── */}
+      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 py-6">
         <div className="relative flex items-center justify-between">
           {/* Left */}
-          <span className="font-sans text-merino-white text-xs sm:text-sm uppercase tracking-widest">
+          <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
             Charlotte Schaerlaecken
           </span>
 
-          {/* Center — absolutely centered */}
+          {/* Center — absolutely positioned, same as top-bar */}
           <div className="absolute left-1/2 -translate-x-1/2">
             <Image
               src="/images/cs-monogram.svg"
               alt="CS Monogram - Charlotte Schaerlaecken"
-              width={56}
+              width={140}
               height={56}
-              className="h-8 sm:h-10 md:h-12 w-auto"
+              className="h-8 sm:h-10 md:h-14 w-auto"
             />
           </div>
 
           {/* Right */}
-          <span className="font-sans text-merino-white text-xs sm:text-sm uppercase tracking-widest">
+          <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
             &copy; {year}
           </span>
         </div>
       </div>
+
     </footer>
   )
 }
