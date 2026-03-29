@@ -102,7 +102,7 @@ function ContactForm() {
       formData.append("name", naam)
       formData.append("email", email)
       formData.append("message", boodschap)
-      formData.append("to_email", "hallo@charlotteschaerlaecken.be")
+      formData.append("to_email", "denil.jonas@gmail.com")
       formData.append("subject", `New message from ${naam}`)
 
       const response = await fetch("https://api.web3forms.com/submit", {
