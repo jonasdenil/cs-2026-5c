@@ -272,27 +272,22 @@ function MobileSkillItem({
   isOpen,
   onClick,
   index,
+  parentVisible,
 }: {
   skill: Skill
   isOpen: boolean
   onClick: () => void
   index: number
+  parentVisible: boolean
 }) {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const t = setTimeout(() => setIsVisible(true), 60 + index * 90)
-    return () => clearTimeout(t)
-  }, [index])
-
   return (
     <div
       className="w-full bg-merino-white rounded-lg overflow-hidden shadow-sm"
       style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translateY(0)" : "translateY(12px)",
+        opacity: parentVisible ? 1 : 0,
+        transform: parentVisible ? "translateY(0)" : "translateY(12px)",
         transition: `opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1)`,
-        transitionDelay: `${index * 90}ms`,
+        transitionDelay: `${60 + index * 90}ms`,
       }}
     >
       <button
@@ -385,16 +380,17 @@ function MobileModal({ onClose }: { onClose: () => void }) {
               setOpenSkill(openSkill === skill.id ? null : skill.id)
             }
             index={index}
+            parentVisible={isVisible}
           />
         ))}
 
-        {/* Close button — styled like "Creatieve stack" trigger, staggered last */}
+        {/* Close button — last in stagger: delay after final skill item */}
         <div
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? "translateY(0)" : "translateY(12px)",
             transition: `opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1)`,
-            transitionDelay: `${skills.length * 90 + 60}ms`,
+            transitionDelay: `${60 + skills.length * 90}ms`,
             display: "flex",
             justifyContent: "center",
           }}
