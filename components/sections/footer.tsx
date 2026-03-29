@@ -46,7 +46,7 @@ function FloatingField({
         onBlur={() => setFocused(false)}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          "w-full bg-transparent border-b pb-2 pt-5 font-sans text-sm uppercase tracking-wider text-merino-white",
+          "w-full bg-transparent border-b pb-2 pt-5 font-sans text-sm font-medium uppercase tracking-wider text-merino-white",
           "focus:outline-none transition-colors duration-200",
           focused ? "border-merino-white" : "border-merino-white/30"
         )}
@@ -97,9 +97,9 @@ function ContactForm() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Form heading — Bolota, as per design spec */}
+      {/* Form heading — Bolota, left-aligned as per design spec */}
       <h3
-        className="font-serif text-merino-white text-center"
+        className="font-serif text-merino-white text-left"
         style={{ fontSize: "38px", fontWeight: 240, lineHeight: "normal" }}
       >
         Or hit my pager
@@ -149,9 +149,10 @@ function ContactForm() {
               type="submit"
               disabled={status === "loading"}
               className={cn(
-                "inline-flex items-center gap-2 bg-merino-white text-rustic-red rounded-full px-5 py-2",
-                "font-sans text-xs sm:text-sm uppercase tracking-widest font-medium",
-                "transition-colors duration-200 hover:bg-tea-rose",
+                "inline-flex items-center gap-2 bg-merino-white text-rustic-red rounded-full px-3.5 py-1.5",
+                "font-sans text-base font-semibold uppercase whitespace-nowrap",
+                "transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red",
                 "disabled:opacity-50 disabled:cursor-not-allowed"
               )}
             >
@@ -209,7 +210,7 @@ export function Footer() {
         The right column aligns with the second half of the max-w-screen-xl container.
       */}
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-12 md:gap-20 lg:gap-28">
 
           {/* Left col — camera, overlapping up */}
           <div className="flex justify-center md:justify-start -mt-20 md:-mt-40 z-10">
