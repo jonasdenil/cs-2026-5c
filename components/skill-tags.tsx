@@ -370,11 +370,11 @@ function MobileModal({ onClose }: { onClose: () => void }) {
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-rustic-red/90 backdrop-blur-md"
+        className="absolute inset-0 bg-rustic-red/70 backdrop-blur-md"
         onClick={handleClose}
       />
 
-      {/* Skills list */}
+      {/* Skills list + close button — same gap throughout */}
       <div className="relative z-10 w-full max-w-sm flex flex-col gap-3">
         {skills.map((skill, index) => (
           <MobileSkillItem
@@ -387,24 +387,25 @@ function MobileModal({ onClose }: { onClose: () => void }) {
             index={index}
           />
         ))}
-      </div>
 
-      {/* Close button */}
-      <button
-        onClick={handleClose}
-        aria-label="Sluiten"
-        className={cn(
-          "relative z-10 mt-8 w-12 h-12 rounded-full border-2 border-merino-white",
-          "flex items-center justify-center text-merino-white",
-          "transition-all duration-500 ease-out",
-          "hover:bg-merino-white hover:text-rustic-red",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-        )}
-        style={{ transitionDelay: `${skills.length * 80 + 120}ms` }}
-      >
-        <X size={22} strokeWidth={2} />
-      </button>
+        {/* Close button — same gap as between skill tags */}
+        <button
+          onClick={handleClose}
+          aria-label="Sluiten"
+          className={cn(
+            "w-full flex items-center justify-center gap-2 px-6 py-4 rounded-lg",
+            "bg-merino-white text-rustic-red font-sans font-semibold uppercase text-base",
+            "transition-all duration-500 ease-out",
+            "hover:bg-merino-white/90",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red",
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          )}
+          style={{ transitionDelay: `${skills.length * 80 + 120}ms` }}
+        >
+          Sluiten
+          <X size={18} strokeWidth={2} />
+        </button>
+      </div>
     </div>,
     document.body
   )
