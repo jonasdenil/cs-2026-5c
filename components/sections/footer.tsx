@@ -2,8 +2,10 @@
 
 import Image from "next/image"
 import { useState } from "react"
-import { ArrowRight, X } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { revealStyle } from "@/components/sections/who-section"
 
 // ─── Floating Label Field ─────────────────────────────────────────────────────
 
@@ -28,14 +30,11 @@ function FloatingField({
 
   return (
     <div className="relative w-full">
-      {/* Floating label */}
       <label
         className={cn(
           "absolute left-0 font-sans uppercase tracking-widest text-merino-white/60 pointer-events-none",
           "transition-all duration-200 ease-in-out",
-          lifted
-            ? "text-[10px] top-0 text-merino-white/80"
-            : "text-xs top-[18px]"
+          lifted ? "text-[10px] top-0 text-merino-white/80" : "text-xs top-[18px]"
         )}
       >
         {label}
@@ -97,13 +96,11 @@ function ContactForm() {
         body: JSON.stringify({ naam, email, boodschap }),
       })
       const data = await res.json()
-
       if (!res.ok) {
         setErrorMsg(data.error || "Er liep iets mis.")
         setStatus("error")
         return
       }
-
       setStatus("success")
       setNaam("")
       setEmail("")
@@ -116,7 +113,6 @@ function ContactForm() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Form heading — Bolota, centered on mobile, left on desktop */}
       <h3
         className="font-serif text-merino-white text-center md:text-left"
         style={{ fontSize: "clamp(1.2rem, 3.8vw, 2.4rem)", fontWeight: 240, lineHeight: "normal" }}
@@ -130,41 +126,14 @@ function ContactForm() {
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          {/* Row: Naam + E-mailadres */}
           <div className="flex flex-col sm:flex-row gap-6">
-            <FloatingField
-              label="Naam"
-              value={naam}
-              onChange={setNaam}
-              required
-            />
-            <FloatingField
-              label="E-mailadres"
-              type="email"
-              value={email}
-              onChange={setEmail}
-              required
-            />
+            <FloatingField label="Naam" value={naam} onChange={setNaam} required />
+            <FloatingField label="E-mailadres" type="email" value={email} onChange={setEmail} required />
           </div>
-
-          {/* Bericht — textarea supports multiple lines */}
-          <FloatingField
-            label="Bericht"
-            type="textarea"
-            value={boodschap}
-            onChange={setBoodschap}
-            required
-            rows={4}
-          />
-
-          {/* Error */}
+          <FloatingField label="Bericht" type="textarea" value={boodschap} onChange={setBoodschap} required rows={4} />
           {status === "error" && (
-            <p className="font-sans text-ruby-red text-xs uppercase tracking-widest -mt-2">
-              {errorMsg}
-            </p>
+            <p className="font-sans text-ruby-red text-xs uppercase tracking-widest -mt-2">{errorMsg}</p>
           )}
-
-          {/* Submit — same rounded-full CTA as used elsewhere in the site */}
           <div>
             <button
               type="submit"
@@ -189,9 +158,9 @@ function ContactForm() {
 
 // ─── Camera image ─────────────────────────────────────────────────────────────
 
-function CameraImage({ className }: { className?: string }) {
+function CameraImage({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
-    <div className={className}>
+    <div className={className} style={style}>
       <div style={{ transform: "rotate(81deg)" }}>
         <Image
           src="/images/camera.png"
@@ -208,38 +177,57 @@ function CameraImage({ className }: { className?: string }) {
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
+const CONTACT_LINKS = [
+  { href: "tel:+32476353677", label: "+32 476 35 36 77", external: false },
+  { href: "mailto:hallo@charlotteschaerlaecken.be", label: "hallo@charlotteschaerlaecken.be", external: false },
+  { href: "https://www.instagram.com/c.schaerlaecken/", label: "@c.schaerlaecken", external: true },
+]
+
 export function Footer() {
   const year = new Date().getFullYear()
+
+  // Contact lines — each gets its own observer so they stagger as they enter view
+  const { ref: ref0, isVisible: vis0 } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
+  const { ref: ref1, isVisible: vis1 } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
+  const { ref: ref2, isVisible: vis2 } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
+
+  // Camera
+  const { ref: cameraRef, isVisible: cameraVisible } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
+
+  // Form
+  const { ref: formRef, isVisible: formVisible } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
+
+  // Mobile camera (between form and copyright)
+  const { ref: mobileCameraRef, isVisible: mobileCameraVisible } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
+
+  // Copyright bar — left, center, right each stagger
+  const { ref: copyrightRef, isVisible: copyrightVisible } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
+
+  const contactRefs = [ref0, ref1, ref2]
+  const contactVisibility = [vis0, vis1, vis2]
 
   return (
     <footer className="bg-rustic-red w-full">
 
       {/* ── Contact info block ── */}
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 pt-20 md:pt-28">
-        <div className="flex flex-col items-center text-center leading-none">
-          <a
-            href="tel:+32476353677"
-            className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.6rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
-          >
-            +32 476 35 36 77
-          </a>
-          <a
-            href="mailto:hallo@charlotteschaerlaecken.be"
-            className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.6rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
-          >
-            hallo@charlotteschaerlaecken.be
-          </a>
-          <a
-            href="https://www.instagram.com/c.schaerlaecken/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.6rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
-          >
-            @c.schaerlaecken
-          </a>
+        <div className="flex flex-col items-center text-center leading-none gap-1">
+          {CONTACT_LINKS.map((link, i) => (
+            <a
+              key={link.href}
+              ref={contactRefs[i] as React.RefObject<HTMLAnchorElement>}
+              href={link.href}
+              {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
+              style={{
+                fontSize: "clamp(1.6rem, 3.8vw, 3.8rem)",
+                lineHeight: 1.05,
+                ...revealStyle(contactVisibility[i], i * 120),
+              }}
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
       </div>
 
@@ -248,31 +236,57 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-12 md:gap-20 lg:gap-28">
 
           {/* Left col — camera: hidden on mobile, shown on md+ */}
-          <CameraImage className="hidden md:flex justify-start mt-[81px] z-10" />
+          <CameraImage
+            className="hidden md:flex justify-start mt-[81px] z-10"
+            style={revealStyle(cameraVisible)}
+          />
+          {/* Invisible anchor for camera scroll reveal (desktop) */}
+          <div
+            ref={cameraRef as React.RefObject<HTMLDivElement>}
+            className="hidden md:block absolute pointer-events-none"
+            aria-hidden="true"
+          />
 
           {/* Right col — form */}
-          <div className="pt-12 md:pt-28 pb-8">
+          <div
+            ref={formRef as React.RefObject<HTMLDivElement>}
+            className="pt-12 md:pt-28 pb-8"
+            style={revealStyle(formVisible)}
+          >
             <ContactForm />
           </div>
         </div>
       </div>
 
       {/* ── Camera on mobile only — between form and copyright ── */}
-      <div className="md:hidden flex justify-center mt-16 px-6">
+      <div
+        ref={mobileCameraRef as React.RefObject<HTMLDivElement>}
+        className="md:hidden flex justify-center mt-16 px-6"
+        style={revealStyle(mobileCameraVisible)}
+      >
         <CameraImage className="flex justify-center" />
       </div>
 
       {/* ── Bottom bar — mirrors top-bar exactly ── */}
-      <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 pt-20 md:pt-32 py-6 pb-32">
+      <div
+        ref={copyrightRef as React.RefObject<HTMLDivElement>}
+        className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 pt-20 md:pt-32 py-6 pb-32"
+      >
         <div className="relative flex items-center justify-between">
 
-          {/* Left — wraps to two lines on mobile */}
-          <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase max-w-[30%] md:max-w-none leading-tight">
+          {/* Left */}
+          <span
+            className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase max-w-[30%] md:max-w-none leading-tight"
+            style={revealStyle(copyrightVisible, 0)}
+          >
             Charlotte<br className="md:hidden" /> Schaerlaecken
           </span>
 
-          {/* Center — absolutely positioned CS logo */}
-          <div className="absolute left-1/2 -translate-x-1/2">
+          {/* Center — CS logo */}
+          <div
+            className="absolute left-1/2 -translate-x-1/2"
+            style={revealStyle(copyrightVisible, 150)}
+          >
             <Image
               src="/images/cs-monogram.svg"
               alt="CS Monogram - Charlotte Schaerlaecken"
@@ -283,7 +297,10 @@ export function Footer() {
           </div>
 
           {/* Right */}
-          <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
+          <span
+            className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase"
+            style={revealStyle(copyrightVisible, 300)}
+          >
             &copy; {year}
           </span>
         </div>
