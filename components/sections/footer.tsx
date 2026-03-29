@@ -116,10 +116,10 @@ function ContactForm() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Form heading — Bolota, left-aligned as per design spec */}
+      {/* Form heading — Bolota, centered on mobile, left on desktop */}
       <h3
-        className="font-serif text-merino-white text-left"
-        style={{ fontSize: "38px", fontWeight: 240, lineHeight: "normal" }}
+        className="font-serif text-merino-white text-center md:text-left"
+        style={{ fontSize: "clamp(1.2rem, 3.8vw, 2.4rem)", fontWeight: 240, lineHeight: "normal" }}
       >
         Or hit my pager
       </h3>
@@ -147,7 +147,7 @@ function ContactForm() {
             />
           </div>
 
-          {/* Bericht — textarea now supports multiple lines */}
+          {/* Bericht — textarea supports multiple lines */}
           <FloatingField
             label="Bericht"
             type="textarea"
@@ -187,6 +187,25 @@ function ContactForm() {
   )
 }
 
+// ─── Camera image ─────────────────────────────────────────────────────────────
+
+function CameraImage({ className }: { className?: string }) {
+  return (
+    <div className={className}>
+      <div style={{ transform: "rotate(81deg)" }}>
+        <Image
+          src="/images/camera.png"
+          alt="Sony DSC-W130 camera"
+          width={570}
+          height={760}
+          className="w-[360px] md:w-[480px] lg:w-[570px] h-auto drop-shadow-2xl"
+          priority
+        />
+      </div>
+    </div>
+  )
+}
+
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 export function Footer() {
@@ -201,14 +220,14 @@ export function Footer() {
           <a
             href="tel:+32476353677"
             className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.2rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
+            style={{ fontSize: "clamp(1.6rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
           >
             +32 476 35 36 77
           </a>
           <a
             href="mailto:hallo@charlotteschaerlaecken.be"
             className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.2rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
+            style={{ fontSize: "clamp(1.6rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
           >
             hallo@charlotteschaerlaecken.be
           </a>
@@ -217,7 +236,7 @@ export function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-            style={{ fontSize: "clamp(1.2rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
+            style={{ fontSize: "clamp(1.6rem, 3.8vw, 3.8rem)", lineHeight: 1.05 }}
           >
             @c.schaerlaecken
           </a>
@@ -225,44 +244,34 @@ export function Footer() {
       </div>
 
       {/* ── Camera + Contact form block ── */}
-      {/*
-        50/50 grid: left col = camera, right col = form.
-        Camera overlaps the contact-info block above via negative top margin.
-        The right column aligns with the second half of the max-w-screen-xl container.
-      */}
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-12 md:gap-20 lg:gap-28">
 
-          {/* Left col — camera, overlapping up — positioned lower so only top-right corner overlaps bottom 50% of @c.schaerlaecken */}
-          <div className="flex justify-center md:justify-start mt-[113px] md:mt-[81px] z-10">
-            <div style={{ transform: "rotate(81deg)" }}>
-              <Image
-                src="/images/camera.png"
-                alt="Sony DSC-W130 camera"
-                width={570}
-                height={760}
-                className="w-[360px] md:w-[480px] lg:w-[570px] h-auto drop-shadow-2xl"
-                priority
-              />
-            </div>
-          </div>
+          {/* Left col — camera: hidden on mobile, shown on md+ */}
+          <CameraImage className="hidden md:flex justify-start mt-[81px] z-10" />
 
-          {/* Right col — form, starts at second column */}
+          {/* Right col — form */}
           <div className="pt-12 md:pt-28 pb-8">
             <ContactForm />
           </div>
         </div>
       </div>
 
+      {/* ── Camera on mobile only — between form and copyright ── */}
+      <div className="md:hidden flex justify-center mt-16 px-6">
+        <CameraImage className="flex justify-center" />
+      </div>
+
       {/* ── Bottom bar — mirrors top-bar exactly ── */}
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 pt-20 md:pt-32 py-6 pb-32">
         <div className="relative flex items-center justify-between">
-          {/* Left */}
-          <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase">
-            Charlotte Schaerlaecken
+
+          {/* Left — wraps to two lines on mobile */}
+          <span className="font-sans text-merino-white text-xs sm:text-sm md:text-base font-medium uppercase max-w-[30%] md:max-w-none leading-tight">
+            Charlotte<br className="md:hidden" /> Schaerlaecken
           </span>
 
-          {/* Center — absolutely positioned, same as top-bar */}
+          {/* Center — absolutely positioned CS logo */}
           <div className="absolute left-1/2 -translate-x-1/2">
             <Image
               src="/images/cs-monogram.svg"
