@@ -1,8 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { useAnimation } from "@/components/animation/animation-context"
+import { useEaseScroll } from "@/hooks/use-ease-scroll"
 
 const navItems = [
   { label: "Who?", href: "#who" },
@@ -14,33 +15,12 @@ export function BottomNav() {
   const [open, setOpen] = useState(false)
   const { isStepActive, isStepComplete, completeStep } = useAnimation()
 
-  const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault()
+  const scrollTo = useEaseScroll(800)
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setOpen(false)
-    const target = document.querySelector(href)
-    if (target) {
-      const targetPosition = target.getBoundingClientRect().top + window.scrollY
-      const startPosition = window.scrollY
-      const distance = targetPosition - startPosition
-      const duration = 800 // ms
-      let startTime: number | null = null
-
-      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
-
-      const scroll = (currentTime: number) => {
-        if (startTime === null) startTime = currentTime
-        const elapsed = currentTime - startTime
-        const progress = Math.min(elapsed / duration, 1)
-        const ease = easeOutCubic(progress)
-        window.scrollTo(0, startPosition + distance * ease)
-        if (progress < 1) {
-          requestAnimationFrame(scroll)
-        }
-      }
-
-      requestAnimationFrame(scroll)
-    }
-  }, [])
+    scrollTo(e, href)
+  }
   const [hasAnimated, setHasAnimated] = useState(false)
   
   const isActive = isStepActive("main-nav")

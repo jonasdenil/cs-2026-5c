@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { useEaseScroll } from "@/hooks/use-ease-scroll"
 import { SkillTags } from "@/components/skill-tags"
 
 // Shared reveal style — use on any element that should fade-in from bottom
@@ -59,6 +60,7 @@ function WhoStaggeredTitle({ isVisible }: { isVisible: boolean }) {
 }
 
 export function WhoSection() {
+  const scrollTo = useEaseScroll(800)
   const { ref: photoRef, isVisible: photoVisible } = useScrollReveal({ threshold: 0.15, rootMargin: "0px 0px -20% 0px" })
   const { ref: titleRef, isVisible: titleVisible } = useScrollReveal({ threshold: 0.2, rootMargin: "0px 0px -15% 0px" })
   const { ref: textRef, isVisible: textVisible } = useScrollReveal({ threshold: 0.15, rootMargin: "0px 0px -15% 0px" })
@@ -118,6 +120,7 @@ export function WhoSection() {
               {/* CTA button */}
               <a
                 href="#contact"
+                onClick={(e) => scrollTo(e, "#contact")}
                 className="inline-flex items-center gap-2 bg-merino-white text-rustic-red font-sans text-base font-semibold uppercase rounded-full px-3.5 py-1.5 transition-colors duration-200 hover:bg-ruby-red hover:text-merino-white focus:outline-none focus-visible:ring-2 focus-visible:ring-ruby-red"
               >
                 Hit My Pager
