@@ -238,7 +238,7 @@ export function Footer() {
               ref={contactRefs[i] as React.RefObject<HTMLAnchorElement>}
               href={link.href}
               {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
+              className="font-serif text-merino-white font-bold uppercase text-balance hover:text-coral-reef transition-colors duration-500"
               style={{
                 fontSize: "clamp(1.1rem, 3.8vw, 3.8rem)",
                 lineHeight: 1.05,
