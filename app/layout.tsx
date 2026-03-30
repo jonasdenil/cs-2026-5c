@@ -25,9 +25,11 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   },
   openGraph: {
     title: 'Charlotte Schaerlaecken | Creatief Strateeg',
@@ -59,7 +61,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#551104',
+  themeColor: '#A31918',
+  userScalable: true,
   width: 'device-width',
   initialScale: 1,
 }
