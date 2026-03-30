@@ -12,6 +12,8 @@ interface CaseCardProps {
   description?: string
   /** Background image URL (will come from CMS) */
   imageUrl?: string
+  /** Optional collaboration partner(s) - if undefined, collaboration section is hidden */
+  collaboration?: string
 }
 
 export function CaseCard({
@@ -19,6 +21,7 @@ export function CaseCard({
   title = "Bednet",
   description = "some short description of the project to give people an idea on what the project is about",
   imageUrl = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
+  collaboration,
 }: CaseCardProps) {
   return (
     <div className="rounded-md overflow-hidden flex flex-col">
@@ -111,31 +114,33 @@ export function CaseCard({
           </p>
         </div>
 
-        {/* Collaboration info — bottom center */}
-        <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center justify-center">
-          <p
-            className="text-merino-white text-center uppercase"
-            style={{
-              fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-              fontSize: "clamp(8px, 1.2vw, 12px)",
-              fontWeight: 400,
-              letterSpacing: "0.05em",
-              lineHeight: 1.2,
-            }}
-          >
-            in samenwerking met
-          </p>
-          <h4
-            className="font-serif text-merino-white text-center mt-1"
-            style={{
-              fontSize: "clamp(16px, 2.5vw, 28px)",
-              fontWeight: 240,
-              lineHeight: 1,
-            }}
-          >
-            CHOOCHOO
-          </h4>
-        </div>
+        {/* Collaboration info — bottom center, only shown if collaboration is provided */}
+        {collaboration && (
+          <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center justify-center">
+            <p
+              className="text-merino-white text-center uppercase"
+              style={{
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                fontSize: "clamp(8px, 1.2vw, 12px)",
+                fontWeight: 400,
+                letterSpacing: "0.05em",
+                lineHeight: 1.2,
+              }}
+            >
+              in samenwerking met
+            </p>
+            <h4
+              className="font-serif text-merino-white text-center mt-1"
+              style={{
+                fontSize: "clamp(16px, 2.5vw, 28px)",
+                fontWeight: 240,
+                lineHeight: 1,
+              }}
+            >
+              {collaboration}
+            </h4>
+          </div>
+        )}
       </div>
     </div>
   )
