@@ -8,31 +8,35 @@ import { CaseCard } from "@/components/case-card"
 const CASES = [
   {
     id: 1,
-    fileName: "Bednet_Final_ReallyFinal_v3",
-    title: "Bednet",
-    description: "some short description of the project to give people an idea on what the project is about",
-    imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
+    fileName: "stico_merkstrategie_2026_v6",
+    title: "STICO",
+    description: "De fundering voor STICO gelegd met een merk- en socialstrategie, aangevuld met een volledig uitgewerkt launchconcept.",
+    imageUrl: "/images/cases/stico.jpg",
+    collaboration: undefined, // No collaboration for STICO
   },
   {
     id: 2,
-    fileName: "Project_Draft_v2",
-    title: "Case 02",
-    description: "another project description that explains the work done for this client",
-    imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+    fileName: "aiki_socialplaybook_FINAL",
+    title: "AIKI",
+    description: "Een strategische vertaling gemaakt van hoe Aïki een jongere doelgroep moet bereiken op TikTok en zo zich diep in de noodle-cultuur kan nestelen.",
+    imageUrl: "/images/cases/aiki.jpg",
+    collaboration: "CHOOCHOO",
   },
   {
     id: 3,
-    fileName: "Campaign_2024_Final",
-    title: "Case 03",
-    description: "creative campaign work showcasing strategic thinking and execution",
-    imageUrl: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80",
+    fileName: "together@work_socialstrat_v2",
+    title: "Flanders@work",
+    description: "Via een strategische workshop een nieuwe merkoefening gedaan met een video-first social strategie op Instagram en personal branding strategie op LinkedIn als eindresultaat.",
+    imageUrl: "/images/cases/flanders-at-work.jpg",
+    collaboration: "Enjoy Digital",
   },
   {
     id: 4,
-    fileName: "Brand_Identity_v1",
-    title: "Case 04",
-    description: "brand identity project demonstrating visual and strategic alignment",
-    imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80",
+    fileName: "bednet_pyjamadag_video10_v12",
+    title: "Bednet Pyjamadag 2025",
+    description: "De editie van Bednet Pyjamadag 2025 in de kijker gezet met creatieve creators & content op de social kanalen.",
+    imageUrl: "/images/cases/bednet.jpg",
+    collaboration: "CHOOCHOO & Amy De Blick",
   },
 ]
 
@@ -54,6 +58,7 @@ function CaseItem({ caseData, delay }: CaseItemProps) {
         title={caseData.title}
         description={caseData.description}
         imageUrl={caseData.imageUrl}
+        collaboration={caseData.collaboration}
       />
     </div>
   )
