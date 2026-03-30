@@ -232,22 +232,31 @@ export function Footer() {
       {/* ── Contact info block ── */}
       <div className="mx-auto max-w-screen-xl px-6 md:px-10 lg:px-16 pt-20 md:pt-28">
         <div className="flex flex-col items-center text-center leading-none gap-1">
-          {CONTACT_LINKS.map((link, i) => (
-            <a
-              key={link.href}
-              ref={contactRefs[i] as React.RefObject<HTMLAnchorElement>}
-              href={link.href}
-              {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="font-serif text-merino-white font-bold uppercase text-balance hover:text-tea-rose transition-colors duration-200"
-              style={{
-                fontSize: "clamp(1.1rem, 3.8vw, 3.8rem)",
-                lineHeight: 1.05,
-                ...revealStyle(contactVisibility[i], i * 120),
-              }}
-            >
-              {link.label}
-            </a>
-          ))}
+          {CONTACT_LINKS.map((link, i) => {
+            const reveal = revealStyle(contactVisibility[i], i * 120)
+            // Merge color transition with the reveal transition so hover works
+            const mergedTransition = reveal.transition
+              ? `${reveal.transition}, color 500ms cubic-bezier(0.4, 0, 0.2, 1)`
+              : "color 500ms cubic-bezier(0.4, 0, 0.2, 1)"
+
+            return (
+              <a
+                key={link.href}
+                ref={contactRefs[i] as React.RefObject<HTMLAnchorElement>}
+                href={link.href}
+                {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="font-serif text-merino-white font-bold uppercase text-balance hover:text-coral-reef"
+                style={{
+                  fontSize: "clamp(1.1rem, 3.8vw, 3.8rem)",
+                  lineHeight: 1.05,
+                  ...reveal,
+                  transition: mergedTransition,
+                }}
+              >
+                {link.label}
+              </a>
+            )
+          })}
         </div>
       </div>
 
