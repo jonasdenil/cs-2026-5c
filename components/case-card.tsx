@@ -110,6 +110,32 @@ export function CaseCard({
             {description}
           </p>
         </div>
+
+        {/* Collaboration info — bottom center */}
+        <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center justify-center">
+          <p
+            className="text-merino-white text-center uppercase"
+            style={{
+              fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+              fontSize: "clamp(8px, 1.2vw, 12px)",
+              fontWeight: 400,
+              letterSpacing: "0.05em",
+              lineHeight: 1.2,
+            }}
+          >
+            in samenwerking met
+          </p>
+          <h4
+            className="font-serif text-merino-white text-center mt-1"
+            style={{
+              fontSize: "clamp(16px, 2.5vw, 28px)",
+              fontWeight: 240,
+              lineHeight: 1,
+            }}
+          >
+            CHOOCHOO
+          </h4>
+        </div>
       </div>
     </div>
   )
