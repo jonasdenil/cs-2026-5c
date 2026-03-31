@@ -102,8 +102,9 @@ function ContactForm() {
       formData.append("name", naam)
       formData.append("email", email)
       formData.append("message", boodschap)
+      formData.append("from_email", email)
       formData.append("to_email", "charlotte.schaerlaecken@gmail.com")
-      formData.append("from_name", "Charlotte Schaerlaecken")
+      formData.append("from_name", naam)
       formData.append("subject", `New message from ${naam}`)
       formData.append("redirect", "https://charlotteschaerlaecken.be")
 

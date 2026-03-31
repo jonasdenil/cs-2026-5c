@@ -5,8 +5,10 @@ import { AnimatedTV } from "@/components/animation/animated-tv"
 import { AnimatedWords } from "@/components/animation/animated-words"
 import { AnimatedLines } from "@/components/animation/animated-lines"
 import { AnimatedElement } from "@/components/animation/animated-element"
+import { useEaseScroll } from "@/hooks/use-ease-scroll"
 
 export function HeroVisual() {
+  const scrollTo = useEaseScroll(800)
   return (
     <div id="hero-visual" className="pt-24">
 
@@ -61,6 +63,7 @@ export function HeroVisual() {
         >
           <a
             href="#contact"
+            onClick={(e) => scrollTo(e, "#contact")}
             className="inline-flex items-center gap-2 bg-ruby-red text-rustic-red font-sans text-base font-semibold uppercase rounded-full px-3.5 py-1.5 transition-colors duration-200 hover:bg-[#c40a19] focus:outline-none focus:ring-2 focus:ring-ruby-red focus:ring-offset-2 focus:ring-offset-rustic-red"
           >
             <Phone size={16} strokeWidth={2} />

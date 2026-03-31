@@ -33,8 +33,8 @@ const CASES = [
   {
     id: 4,
     fileName: "bednet_pyjamadag_video10_v12",
-    title: "Bednet Pyjamadag 2025",
-    description: "De editie van Bednet Pyjamadag 2025 in de kijker gezet met creatieve creators & content op de social kanalen.",
+    title: "Bednet Pyjamadag 2026",
+    description: "De editie van Bednet Pyjamadag 2026 in de kijker gezet met creatieve creators & content op de social kanalen.",
     imageUrl: "/images/cases/bednet.jpg",
     collaboration: "CHOOCHOO & Amy De Blick",
   },
