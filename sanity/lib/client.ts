@@ -5,11 +5,12 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01'
 
 // Read-only client for fetching data
+// useCdn: false ensures we always get fresh data from Sanity
 export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: process.env.NODE_ENV === 'production',
+  useCdn: false,
 })
 
 // Write client with token for mutations (server-side only)
