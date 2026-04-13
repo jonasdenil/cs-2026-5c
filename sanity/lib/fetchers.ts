@@ -4,7 +4,7 @@ import type { CreativeSkill, Case, SiteSettings, ContactMessage } from './types'
 
 // Disable Next.js caching for Sanity fetches so changes appear immediately
 const fetchOptions = {
-  next: { revalidate: 0 }
+  cache: 'no-store' as const
 }
 
 export async function getCreativeSkills(): Promise<CreativeSkill[]> {
