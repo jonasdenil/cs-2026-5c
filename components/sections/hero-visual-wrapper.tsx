@@ -8,11 +8,18 @@ import { AnimatedElement } from "@/components/animation/animated-element"
 import { useEaseScroll } from "@/hooks/use-ease-scroll"
 import type { SiteSettings } from "@/sanity/lib/types"
 
+// Default fallback values when Sanity settings aren't available yet
+const defaultHero = {
+  titleLine1: 'Creatief Strateeg',
+  titleLine2: 'All Things Social',
+  introLine1: "If it stops the scroll, there's strategy behind it.",
+  introLine2: 'From tone to timing, I help your brand own the feed.',
+  ctaButtonText: 'Hit My Pager',
+}
+
 export function HeroVisualWrapper({ settings }: { settings: SiteSettings | null }) {
   const scrollTo = useEaseScroll(800)
-  const hero = settings?.hero
-
-  if (!hero) return null
+  const hero = settings?.hero ?? defaultHero
 
   return (
     <div id="hero-visual" className="pt-24">

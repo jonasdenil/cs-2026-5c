@@ -8,6 +8,15 @@ import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { revealStyle } from "@/components/sections/who-section"
 import type { SiteSettings } from "@/sanity/lib/types"
 
+// Default fallback values when Sanity settings aren't available yet
+const defaultFooter = {
+  phone: '+32 476 35 36 77',
+  email: 'hallo@charlotteschaerlaecken.be',
+  instagram: '@c.schaerlaecken',
+  formTitle: 'Or hit my pager',
+  submitButtonText: 'Versturen',
+}
+
 function FloatingField({
   label,
   type = "text",
@@ -140,7 +149,7 @@ function ContactForm({ settings }: { settings: SiteSettings | null }) {
     }
   }
 
-  if (!settings) return null
+  const footer = settings?.footer ?? defaultFooter
 
   return (
     <div className="flex flex-col gap-8">
@@ -148,7 +157,7 @@ function ContactForm({ settings }: { settings: SiteSettings | null }) {
         className="font-serif text-merino-white text-center md:text-left"
         style={{ fontSize: "clamp(1.2rem, 3.8vw, 2.4rem)", fontWeight: 240, lineHeight: "normal" }}
       >
-        {settings.footer.formTitle}
+        {footer.formTitle}
       </h3>
 
       {status === "success" ? (
@@ -177,7 +186,7 @@ function ContactForm({ settings }: { settings: SiteSettings | null }) {
                 "disabled:opacity-50 disabled:cursor-not-allowed"
               )}
             >
-              {status === "loading" ? "Versturen..." : settings.footer.submitButtonText}
+              {status === "loading" ? "Versturen..." : footer.submitButtonText}
               <ArrowRight size={14} strokeWidth={2} />
             </button>
           </div>
@@ -206,6 +215,7 @@ function CameraImage({ className, style }: { className?: string; style?: React.C
 
 export function FooterWrapper({ settings }: { settings: SiteSettings | null }) {
   const year = new Date().getFullYear()
+  const footer = settings?.footer ?? defaultFooter
 
   const { ref: ref0, isVisible: vis0 } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
   const { ref: ref1, isVisible: vis1 } = useScrollReveal({ threshold: 0.1, rootMargin: "0px 0px -5% 0px" })
@@ -218,12 +228,10 @@ export function FooterWrapper({ settings }: { settings: SiteSettings | null }) {
   const contactRefs = [ref0, ref1, ref2]
   const contactVisibility = [vis0, vis1, vis2]
 
-  if (!settings) return null
-
   const contactLinks = [
-    { href: `tel:${settings.footer.phone.replace(/\s+/g, "")}`, label: settings.footer.phone, external: false },
-    { href: `mailto:${settings.footer.email}`, label: settings.footer.email, external: false },
-    { href: `https://www.instagram.com/${settings.footer.instagram.replace("@", "")}/`, label: settings.footer.instagram, external: true },
+    { href: `tel:${footer.phone.replace(/\s+/g, "")}`, label: footer.phone, external: false },
+    { href: `mailto:${footer.email}`, label: footer.email, external: false },
+    { href: `https://www.instagram.com/${footer.instagram.replace("@", "")}/`, label: footer.instagram, external: true },
   ]
 
   return (

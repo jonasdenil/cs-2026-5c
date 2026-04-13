@@ -6,6 +6,13 @@ import { useAnimation } from "@/components/animation/animation-context"
 import { useEaseScroll } from "@/hooks/use-ease-scroll"
 import type { SiteSettings } from "@/sanity/lib/types"
 
+// Default fallback values when Sanity settings aren't available yet
+const defaultNavigation = {
+  whoLink: 'Who?',
+  casesLink: 'Cases',
+  contactLink: 'Hit My Pager',
+}
+
 export function BottomNavWrapper({ settings }: { settings: SiteSettings | null }) {
   const [open, setOpen] = useState(false)
   const { isStepActive, isStepComplete, completeStep } = useAnimation()
@@ -31,13 +38,12 @@ export function BottomNavWrapper({ settings }: { settings: SiteSettings | null }
   }, [isActive, hasAnimated, completeStep])
 
   const isVisible = isDone || hasAnimated
-
-  if (!settings) return null
+  const navigation = settings?.navigation ?? defaultNavigation
 
   const navItems = [
-    { label: settings.navigation.whoLink, href: "#who" },
-    { label: settings.navigation.casesLink, href: "#cases" },
-    { label: settings.navigation.contactLink, href: "#contact" },
+    { label: navigation.whoLink, href: "#who" },
+    { label: navigation.casesLink, href: "#cases" },
+    { label: navigation.contactLink, href: "#contact" },
   ]
 
   return (
