@@ -20,3 +20,44 @@ export interface Case {
   shortIntro?: string
   collaboration?: string
 }
+
+export interface SiteSettings {
+  _id: string
+  hero: {
+    titleLine1: string
+    titleLine2: string
+    introLine1: string
+    introLine2: string
+    ctaButtonText: string
+  }
+  whoSection: {
+    title: string
+    bio: string
+    ctaButtonText: string
+  }
+  casesSection: {
+    title: string
+    subtitle: string
+  }
+  footer: {
+    phone: string
+    email: string
+    instagram: string
+    formTitle: string
+    submitButtonText: string
+  }
+  navigation: {
+    whoLink: string
+    casesLink: string
+    contactLink: string
+  }
+}
+
+export interface ContactMessage {
+  _id: string
+  name: string
+  email: string
+  message: string
+  submittedAt: string
+  read: boolean
+}

@@ -39,3 +39,27 @@ export const caseBySlugQuery = groq`
     collaboration
   }
 `
+
+// Fetch site settings (singleton document)
+export const siteSettingsQuery = groq`
+  *[_type == "siteSettings"][0] {
+    _id,
+    hero,
+    whoSection,
+    casesSection,
+    footer,
+    navigation
+  }
+`
+
+// Fetch all contact messages
+export const contactMessagesQuery = groq`
+  *[_type == "contactMessage"] | order(_createdAt desc) {
+    _id,
+    name,
+    email,
+    message,
+    submittedAt,
+    read
+  }
+`
