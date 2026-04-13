@@ -21,10 +21,10 @@ export default function Home() {
 
         </div>
 
-        {/* Who Section */}
+        {/* Who Section - renders with Sanity skills data */}
         <WhoSection />
 
-        {/* Cases Section */}
+        {/* Cases Section - renders with Sanity cases data */}
         <CasesSection />
 
         {/* Footer */}

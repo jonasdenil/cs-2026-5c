@@ -5,7 +5,9 @@ import { createPortal } from "react-dom"
 import { X, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import type { CreativeSkill } from "@/sanity/lib/types"
 
+// Transform Sanity skill to internal format
 interface Skill {
   id: string
   title: string
@@ -14,40 +16,18 @@ interface Skill {
   rotation: number
 }
 
-const skills: Skill[] = [
-  {
-    id: "social",
-    title: "Social Strateeg",
-    description:
-      "Sterke online content begint met een sterk idee. Ik vertaal strategie naar creatieve concepten, formats en campagnes die mensen echt willen zien en delen.",
-    position: { top: "72%", left: "58%" },
-    rotation: 8,
-  },
-  {
-    id: "merk",
-    title: "Merkstrateeg",
-    description:
-      "Ik help merken en de mensen erachter hun stem vinden, zodat hun verhaal online even sterk klinkt als in het echt.",
-    position: { top: "52%", left: "8%" },
-    rotation: -6,
-  },
-  {
-    id: "sparpartner",
-    title: "Sparpartner",
-    description:
-      "Tijdens brainstorms schuif ik mee aan tafel met een frisse strategische blik en help ik nieuwe inzichten bovenhalen. En ook aan de zijlijn denk ik mee, via mail, telefoon of gewoon fysiek op kantoor.",
-    position: { top: "68%", left: "28%" },
-    rotation: -10,
-  },
-  {
-    id: "workshop",
-    title: "Workshop Facilitator",
-    description:
-      "De beste ideeën zitten vaak al in het team. Ik faciliteer workshops die inzichten bovenhalen en ideeën vertalen naar een duidelijke richting.",
-    position: { top: "20%", left: "62%" },
-    rotation: 4,
-  },
-]
+function transformSkill(sanitySkill: CreativeSkill): Skill {
+  return {
+    id: sanitySkill._id,
+    title: sanitySkill.title,
+    description: sanitySkill.description,
+    position: {
+      top: `${sanitySkill.desktopPosition?.top ?? 50}%`,
+      left: `${sanitySkill.desktopPosition?.left ?? 50}%`,
+    },
+    rotation: sanitySkill.rotation ?? 0,
+  }
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -56,6 +36,10 @@ interface OriginRect {
   left: number
   width: number
   height: number
+}
+
+interface SkillTagsProps {
+  skills: CreativeSkill[]
 }
 
 // ─── Desktop modal (portal) ────────────────────────────────────────────────
@@ -337,7 +321,7 @@ function MobileSkillItem({
 
 // ─── Mobile full-screen modal (portal) ───────────────────────────────────
 
-function MobileModal({ onClose }: { onClose: () => void }) {
+function MobileModal({ skills, onClose }: { skills: Skill[], onClose: () => void }) {
   const [isVisible, setIsVisible] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
   const [openSkill, setOpenSkill] = useState<string | null>(null)
@@ -449,7 +433,9 @@ function MobileButton({ onClick }: { onClick: () => void }) {
 
 // ─── Main export ──────────────────────────────────────────────────────────
 
-export function SkillTags() {
+export function SkillTags({ skills: sanitySkills }: SkillTagsProps) {
+  const skills = sanitySkills.map(transformSkill)
+  
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
   const [origin, setOrigin] = useState<OriginRect | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -496,7 +482,7 @@ export function SkillTags() {
       )}
 
       {/* Mobile modal — renders in document.body via portal */}
-      {mobileOpen && <MobileModal onClose={() => setMobileOpen(false)} />}
+      {mobileOpen && <MobileModal skills={skills} onClose={() => setMobileOpen(false)} />}
     </>
   )
 }
