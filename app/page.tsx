@@ -1,15 +1,18 @@
 import { TopBar } from "@/components/sections/top-bar"
-import { HeroVisual } from "@/components/sections/hero-visual"
+import { HeroVisualWrapper } from "@/components/sections/hero-visual-wrapper"
 import { WhoSection } from "@/components/sections/who-section"
 import { CasesSection } from "@/components/sections/cases-section"
-import { Footer } from "@/components/sections/footer"
-import { BottomNav } from "@/components/sections/bottom-nav"
+import { FooterWrapper } from "@/components/sections/footer-wrapper"
+import { BottomNavWrapper } from "@/components/sections/bottom-nav-wrapper"
 import { PageWrapper } from "@/components/page-wrapper"
+import { getSiteSettings } from "@/sanity/lib/fetchers"
 
 // Force dynamic rendering so Sanity changes appear immediately
 export const dynamic = 'force-dynamic'
 
-export default function Home() {
+export default async function Home() {
+  const settings = await getSiteSettings()
+
   return (
     <PageWrapper>
       <main id="main-content" className="min-h-screen bg-rustic-red">
@@ -19,7 +22,7 @@ export default function Home() {
           {/* Hero Section */}
           <section id="hero">
             <TopBar />
-            <HeroVisual />
+            <HeroVisualWrapper settings={settings} />
           </section>
 
         </div>
@@ -30,11 +33,11 @@ export default function Home() {
         {/* Cases Section - renders with Sanity cases data */}
         <CasesSection />
 
-        {/* Footer */}
-        <Footer />
+        {/* Footer - renders with Sanity settings data */}
+        <FooterWrapper settings={settings} />
 
-        {/* Sticky bottom navigation */}
-        <BottomNav />
+        {/* Sticky bottom navigation - renders with Sanity settings data */}
+        <BottomNavWrapper settings={settings} />
       </main>
     </PageWrapper>
   )

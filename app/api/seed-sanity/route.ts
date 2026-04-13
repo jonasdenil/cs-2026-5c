@@ -115,6 +115,39 @@ const CASES_DATA = [
   }
 ]
 
+const SITE_SETTINGS_DATA = {
+  _id: 'siteSettings',
+  _type: 'siteSettings',
+  hero: {
+    titleLine1: 'Creatief Strateeg',
+    titleLine2: 'All Things Social',
+    introLine1: 'If it stops the scroll, there\'s strategy behind it.',
+    introLine2: 'From tone to timing, I help your brand own the feed.',
+    ctaButtonText: 'Hit My Pager'
+  },
+  whoSection: {
+    title: 'Mijn creatieve stack',
+    bio: 'Hi there, it\'s me! 26-jarige internet-raised strateeg, altijd op zoek naar het volgende aha-moment.\n\nIk ontleed graag campagnes: waarom werkt het, wat zit erachter en wat kan beter? Vanuit online communities en niches haal ik inzichten die ik vertaal naar strategieën, concepten en verhalen die mensen willen blijven kijken. In omgevingen waar ideeën snel bewegen ben ik op mijn gemak. Brainstorms, workshops en samen bouwen met andere creatieven. Met een scherp oog voor trends, een neus voor onverwachte invalshoeken en een sterke organisatorische blik.',
+    ctaButtonText: 'Hit My Pager'
+  },
+  casesSection: {
+    title: 'Mijn werk',
+    subtitle: 'Selectie van recente projecten'
+  },
+  footer: {
+    phone: '+32 476 35 36 77',
+    email: 'hallo@charlotteschaerlaecken.be',
+    instagram: '@c.schaerlaecken',
+    formTitle: 'Or hit my pager',
+    submitButtonText: 'Versturen'
+  },
+  navigation: {
+    whoLink: 'Who?',
+    casesLink: 'Cases',
+    contactLink: 'Hit My Pager'
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -132,6 +165,7 @@ export async function POST(request: NextRequest) {
     console.log('[v0] Deleting existing data...')
     await writeClient.delete({ query: '*[_type == "creativeSkill"]' })
     await writeClient.delete({ query: '*[_type == "case"]' })
+    await writeClient.delete({ query: '*[_type == "siteSettings"]' })
 
     // Create skills
     console.log('[v0] Creating skills...')
@@ -154,6 +188,11 @@ export async function POST(request: NextRequest) {
       await writeClient.create(doc)
       console.log(`[v0] Created case: ${caseItem.preview.title}`)
     }
+
+    // Create site settings
+    console.log('[v0] Creating site settings...')
+    await writeClient.create(SITE_SETTINGS_DATA)
+    console.log('[v0] Created site settings')
 
     console.log('[v0] Seeding complete!')
     return NextResponse.json(
