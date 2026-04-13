@@ -1,4 +1,4 @@
-import { sanityClient } from '@/sanity/lib/client'
+import { writeClient } from '@/sanity/lib/client'
 import { NextRequest, NextResponse } from 'next/server'
 
 const SKILLS_DATA = [
@@ -130,8 +130,8 @@ export async function POST(request: NextRequest) {
 
     // Delete existing data
     console.log('[v0] Deleting existing data...')
-    await sanityClient.delete({ query: '*[_type == "creativeSkill"]' })
-    await sanityClient.delete({ query: '*[_type == "case"]' })
+    await writeClient.delete({ query: '*[_type == "creativeSkill"]' })
+    await writeClient.delete({ query: '*[_type == "case"]' })
 
     // Create skills
     console.log('[v0] Creating skills...')
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
         ...skill,
         _id: `skill-${skill.order}`
       }
-      await sanityClient.create(doc)
+      await writeClient.create(doc)
       console.log(`[v0] Created skill: ${skill.title}`)
     }
 
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
         ...caseItem,
         _id: `case-${caseItem.order}`
       }
-      await sanityClient.create(doc)
+      await writeClient.create(doc)
       console.log(`[v0] Created case: ${caseItem.preview.title}`)
     }
 
