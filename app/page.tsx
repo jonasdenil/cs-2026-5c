@@ -6,6 +6,9 @@ import { Footer } from "@/components/sections/footer"
 import { BottomNav } from "@/components/sections/bottom-nav"
 import { PageWrapper } from "@/components/page-wrapper"
 
+// Force dynamic rendering so Sanity changes appear immediately
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   return (
     <PageWrapper>
